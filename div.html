@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="css/bootstrap/css/bootstrap.min.css" type="text/css">
+<!-- 添加动画效果 -->
+<link rel="stylesheet" href="css/bootstrap/css/bootstrap-theme.min.css" type="text/css">
+<!-- jquery -->
+<link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
+<!-- css文件 -->
+<link rel="stylesheet" href="css/Style(2).css" type="text/css">
+<style>
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+<script src="mds2.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="d3-ellipse-force.js"></script>
+<script src="js/D3.v4.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/conrec.js"></script>
+<script src="js/bootstrap/bootstrap.min.js"></script>
+<script src="js/stratum_list.js"></script>
+<script type="text/javascript" src="d3-ForceEdgeBundling.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js "></script> 
+
+<body>
+  <div id = "all">
+      <div id = "left_side">
+      <div class='panel panel-default' style="width: 600px;height: 600px">
+        <div class="panel-heading">力引导图 
+           <button id="btnswitch" style="width:70px;height: 23px;margin-left:50px;margin-top:3px;">Switch</button>
+        </div>
+        <div class="panel-body">
+          <div id = "graph_view"></div>
+        </div>
+      </div>
+      </div>
+
+      <div id = "right_side">
+
+      <div class='panel panel-default' style="width: 800px;height: 300px">
+        <div class="panel-heading">树图</div>
+        <div class="panel-body">
+          <div id = "tree_view"></div>
+        </div>
+      </div>
+      <div class='panel panel-default' style="width: 800px;height: 300px">
+        <div class="panel-heading">桑基图
+          <button id="btn1" style="width:80px">TreeEdit</button>
+          <button id="btnrandom" style="width:80px">Random</button>
+          <button id="btn" style="width:80px">Uniform</button>
+          <button style="width:80px">Size</button>
+          <button id="btnden" style="width:80px">Density</button>
+          <button id="btnuniform" style="width:80px">Uniform</button>
+          <button id="btncolormain" style="width:80px">Majority</button>
+          <button id="btntreemap" style="width:80px">Treemap</button>
+        </div>
+        <div class="panel-body">
+          <div id = "sanki_view"></div>
+        </div>
+      </div>
+
+      </div>
+  </div>
+</body>
+
+<script type="text/javascript">
+var svgw=document.getElementById("graph_view").offsetWidth,
+    svgh=document.getElementById("graph_view").offsetHeight;
+
+var svggraph = d3.select("#graph_view")
+            .append("svg")
+            .attr("width", svgw)
+            .attr("height", svgh);
+
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+var simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.name; }))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(svgw / 2, svgh / 2));
+
+d3.json("data3.json", function(error, graph) {
+  if (error) throw error;
+
+  var link = svggraph.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+  var node = svggraph.append("g")
+      .attr("class", "nodes")
+    .selectAll("circle")
+    .data(graph.nodes)
+    .enter().append("circle")
+      .attr("r", 5)
+      .attr("fill", function(d) { return color(d.group); })
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+
+  node.append("title")
+      .text(function(d) { return d.id; });
+
+  simulation
+      .nodes(graph.nodes)
+      .on("tick", ticked);
+
+  simulation.force("link")
+      .links(graph.links);
+
+  function ticked() {
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node
+        .attr("cx", function(d) { 
+          if(d.x > svgw)
+             return svgw;
+          if(d.x < 0)
+             return 0;
+          return d.x; 
+        })
+        .attr("cy", function(d) {
+          if(d.y > svgh)
+             return svgh;
+          if(d.y < 0)
+             return 0;
+         return d.y; 
+       });
+  }
+});
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+</script>

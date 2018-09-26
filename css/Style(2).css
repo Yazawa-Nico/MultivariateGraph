@@ -1,0 +1,93 @@
+html
+p {
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 3px;
+}
+.panel {
+  float: left;
+  margin-bottom: 0px;
+}
+.panel-heading {
+  padding: 2.5px 5px;
+  height: 30px;
+  font-size: 16px;
+  color: #0c0c0c;
+  background-image: linear-gradient(to bottom, #fbfbfb 0, #e0e0e0 100%);
+  background-color: #000;
+  border: none;
+}
+.panel-body {
+  background-color: #FFFFFF;
+  padding: 4px 5px;
+}
+
+#all {
+  width: 1420px;
+  height: 710px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-right: 0px; 
+}
+
+#left_side {
+  width: 600px;
+  height: 600px;
+  float: left;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px; 
+}
+
+#mid_side {
+  width: 880px; 
+  height: 1040px;
+  float: left;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px; 
+}
+
+#right_side {
+  width: 800px;
+  height: 600px;
+  float: left;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px; 
+}
+
+#sanki_view{
+  width: 800px;
+  height: 250px;
+  margin: auto;
+}
+
+#graph_view {
+  width: 550px;
+  height: 550px;
+  margin: auto;
+}
+
+#tree_view {
+  width: 800px;
+  height: 260px;
+  margin: auto;
+}
+
+/*#kview {
+  width: 450px;
+  height: 800px;
+  margin: auto;
+}*/
+
+#curveview {
+  width: 870px;
+  height: 350px;
+  margin: auto;
+  float: left; 
+}

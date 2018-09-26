@@ -1,0 +1,2925 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>石油系统</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap/css/bootstrap.min.css" type="text/css">
+    <!-- 添加动画效果 -->
+    <link rel="stylesheet" href="css/bootstrap/css/bootstrap-theme.min.css" type="text/css">
+    <!-- css文件-->
+    <link rel="stylesheet" href="css/Style.css">
+    
+  </head>
+
+  <body>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="js/D3.v4.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/conrec.js"></script>
+  <script src="js/bootstrap/bootstrap.min.js"></script>
+  <script src="js/stratum_list.js"></script>
+
+  <style>
+    .hidden {
+      opacity: 0.0;
+    }
+
+  </style>
+
+  <div id = "all">
+    <div id = "left_side">
+      <!--控制窗口-->
+      <div class='panel panel-default' style="width: 140px;height: 650px;">
+        <div class="panel-heading">控制窗口</div>
+        <div class="panel-body">
+          <div id = "botton_all" style="margin: 4px 5px;">
+            <p>模式切换:</p>
+              <button class = "btn btn-primary btn-block" id = "switch" >模式切换</button>
+              <button class = "btn btn-block" id = "Horizontal_drawing" disabled="true">水平自定义</button>
+              <button class = "btn btn-block" id = "Optional" disabled="true">立体自定义</button> 
+            
+            <p>热力图:</p>
+              <button class = "btn btn-primary btn-block" type = "button" id = "heatmap">热力图</button>
+            
+            <p>井间连线:</p>
+              <button class = "btn btn-primary btn-block" type = "button" id = "link_line">连线</button>
+
+            <p>等高线:</p>
+              <select id = "stratum_select" class="btn btn-block btn-primary dropdown-toggle" data-toggle="dropdown">
+                <option value="null">NULL</option>
+                <option value="NG1+21">NG1+21</option>
+                <option value="NG1+210">NG1+210</option>
+                <option value="NG1+211">NG1+211</option>
+                <option value="NG1+212">NG1+212</option>
+                <option value="NG1+213">NG1+213</option>
+                <option value="NG1+214">NG1+214</option>
+                <option value="NG1+22">NG1+22</option>
+                <option value="NG1+23">NG1+23</option>
+                <option value="NG1+24">NG1+24</option>
+                <option value="NG1+25">NG1+25</option>
+                <option value="NG1+26">NG1+26</option>
+                <option value="NG1+27">NG1+27</option>
+                <option value="NG1+28">NG1+28</option>
+                <option value="NG1+29">NG1+29</option>
+                <option value="NG31">NG31</option>
+                <option value="NG32">NG32</option>
+                <option value="NG33">NG33</option>
+                <option value="NG34">NG34</option>
+                <option value="NG35">NG35</option>
+                <option value="NG41">NG41</option>
+                <option value="NG42">NG42</option>
+                <option value="NG43">NG43</option>
+                <option value="NG44">NG44</option>
+                <option value="NG51">NG51</option>
+                <option value="NG52">NG52</option>
+                <option value="NG53">NG53</option>
+                <option value="NG54">NG54</option>
+                <option value="NG55">NG55</option>
+                <option value="NG56">NG56</option>
+                <option value="NG61+2">NG61+2</option>
+                <option value="NG63">NG63</option>
+                <option value="NG64">NG64</option>
+                <option value="NG65">NG65</option>
+              </select>
+			  <input id="difference" type="text" class="form-control" value="10"></input>
+              <button class = "btn btn-info btn-block" type = "button" id = "contour">绘制</button>
+			  
+          </div>
+
+        </div>
+      </div>
+
+      <!--散点主视图-->
+      <div class='panel panel-default' style="width: 650px;height: 650px">
+        <div class="panel-heading">宏观井视图</div>
+        <div class="panel-body">
+          <div id = "mainview"></div>
+        </div>
+      </div>
+
+      <!--井间视图-->
+      <div class='panel panel-default' style="width: 650px;height: 650px">
+        <div class="panel-heading">井间匹配</div>
+        <div class="panel-body">
+          <div id="matrixview"></div>
+        </div>
+      </div>
+
+      <div> 
+        <!--选取点视图-->
+        <div class='panel panel-default' style="width: 790px;height: 390px">
+          <div class="panel-heading">选取点视图</div>
+          <div class="panel-body">
+            <div id="detailview"></div>
+          </div>
+        </div>
+
+        <!--属性对比-->
+        <div class='panel panel-default' style="width: 650px;height: 390px">
+          <div class="panel-heading">属性对比</div>
+          <div class="panel-body">
+            <div id="curveview"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="width: 460px;height: 1040px;float: left;">
+      <div class='panel panel-default' style = "width: 460px;height: 200px">
+        <div class="panel-heading">控制窗口</div>
+        <div class="panel-body">
+          <div id = "matrix_botton">
+            <p>层间修改:</p>
+              <button id="add" class = "btn" type = "button">Add</button>
+              <button id="delete" class = "btn" type = "button">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!--两井操作-->
+      <div class='panel panel-default' style="width: 460px;height: 840px">
+        <div class="panel-heading">井间连线</div>
+        <div class="panel-body">
+          <div id="kview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+////////////////////////////读取数据///////////////////// https://d3js.org/d3.v4.min.js
+
+d3.json("Well-Data.json", function(root) {
+
+  var welldata=[];
+  var FlagGroup=[];
+
+  var First_ID="Unknown";
+  var count = 0;
+
+  root.forEach(function(d) {
+    
+    if(d.ID_full!=First_ID)
+    {
+      var tempdata={};
+      tempdata.ID=d.ID_full;
+      tempdata.linkids=[];
+      tempdata.indexn = count;
+      count++; 
+      tempdata.posx=d.X;
+      tempdata.posy=d.Y;
+    	tempdata.Data=[];
+
+    	if("Top_depth" in d)
+    	{
+    		var layerd={};
+    		layerd.Top_depth=parseFloat(d.Top_depth);
+
+    		if("Bot_depth" in d){ layerd.Bot_depth=parseFloat(d.Bot_depth);}
+        	else { layerd.Bot_depth=-100; }
+
+        	layerd.Sandstone=parseFloat(d.Sandstone);
+
+        	if(layerd.Bot_depth<1000 || layerd.Bot_depth>1500)layerd.Bot_depth=layerd.Top_depth+layerd.Sandstone;
+
+        	if(layerd.Bot_depth < layerd.Top_depth)
+        	{
+          		var tempb=layerd.Bot_depth;
+          		var tempt=layerd.Top_depth;
+
+          		layerd.Bot_depth=tempt;
+          		layerd.Top_depth=tempb;
+        	}
+
+        	if(layerd.Sandstone != layerd.Bot_depth-layerd.Top_depth) layerd.Sandston=layerd.Bot_depth-layerd.Top_depth;
+
+    		  layerd.Flag=d.Flag;
+
+        	if(FlagGroup.indexOf(layerd.Flag)<0) FlagGroup.push(layerd.Flag);
+
+    		  tempdata.Data.push(layerd);
+    	}
+    	welldata.push(tempdata);
+    	First_ID=d.ID_full;
+    }
+    else
+    {
+    	if("Top_depth" in d)
+    	{
+        var layerd={};
+        layerd.Top_depth=parseFloat(d.Top_depth);
+
+        if("Bot_depth" in d){ layerd.Bot_depth=parseFloat(d.Bot_depth); }
+        else { layerd.Bot_depth=-100; }
+
+        layerd.Sandstone=parseFloat(d.Sandstone);
+
+        if(layerd.Bot_depth<1000 || layerd.Bot_depth>1500) layerd.Bot_depth=layerd.Top_depth+layerd.Sandstone;
+
+        if(layerd.Bot_depth < layerd.Top_depth)
+        {
+          var tempb=layerd.Bot_depth;
+          var tempt=layerd.Top_depth;
+
+          layerd.Bot_depth=tempt;
+          layerd.Top_depth=tempb;
+        }
+
+        if(layerd.Sandstone!= layerd.Bot_depth-layerd.Top_depth)layerd.Sandstone=layerd.Bot_depth-layerd.Top_depth;
+
+    		layerd.Flag=d.Flag;
+
+        if(FlagGroup.indexOf(layerd.Flag)<0)FlagGroup.push(layerd.Flag);
+
+    		welldata[ welldata.length-1 ].Data.push(layerd);
+    	}
+    }
+  });
+console.log(welldata);
+
+var Length = document.getElementById("mainview").offsetHeight;
+//制定显示油田鸟瞰图的大小///////////////////////////////////////////////////////////////////
+var minposx = d3.min(welldata,function(d){return d.posx;}),
+    minposy = d3.min(welldata,function(d){return d.posy;}),
+    maxposx = d3.max(welldata,function(d){return d.posx;}),
+    maxposy = d3.max(welldata,function(d){return d.posy;});
+
+var pos_height = maxposy - minposy;
+var pos_width = maxposx - minposx;
+
+var FlagScalex = d3.scaleLinear().domain([minposx,maxposx]).range([Length*0.05, Length*0.95]);
+var FlagScaley = d3.scaleLinear().domain([minposy,maxposy]).range([Length*0.05, Length*0.95]);
+
+//制定绘图标准//////////////////////////////////////////////////////////////////////////////
+//新数据
+var svgh = 1230;
+var well_width=80;  //井宽
+var well_height=svgh-20;
+var interval=50;  //井间隔
+var well_num=7;    //绘制的井的数量
+var startx=100;
+var starty=20;
+
+var TopH=1000, BotH=1400; //定义绘制的区间
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+var FlagScale = d3.scaleLinear().domain([TopH, BotH]).range([0, well_height]);
+//绘制多边形面的函数///////
+var surface = d3.line()
+      .x(function(d) { return d[0]; })
+      .y(function(d) { return d[1]; })
+      .curve(d3.curveLinearClosed);
+var kscale=well_height/(BotH-TopH);
+
+for(var i=0;i<well_num;i++)
+{
+  //绘制每口井的标志层并统计/////////////////
+  welldata[i].Flag_group=[];
+  for(var j=0;j<welldata[i].Data.length;j++)
+    welldata[i].Flag_group.push(welldata[i].Data[j].Flag);
+}
+
+//全局视图参数//
+
+var svg = d3.select("#mainview")
+      .append("svg")
+      .attr("width", Length)
+      .attr("height", Length);
+
+var contour_g = svg.append("g");
+var gwells = svg.append("g");
+
+//放大视图svg
+var svgdw = document.getElementById("detailview").offsetWidth,
+    svgdh = document.getElementById("detailview").offsetHeight;
+    console.log(svgdh);
+
+var svgd = d3.select("#detailview")
+      .append("svg")
+      .attr("width", svgdw)
+      .attr("height", svgdh);
+
+//两井匹配皮尔森矩阵图
+var svgmw=document.getElementById("matrixview").offsetWidth,
+    svgmh=document.getElementById("matrixview").offsetHeight;
+
+var svgm = d3.select("#matrixview")
+      .append("svg")
+      .attr("width", svgmw)
+      .attr("height", svgmh);
+
+//新数据/////////////////
+var well_num=7;
+
+//
+var svgcw=document.getElementById("curveview").offsetWidth, 
+    svgch=document.getElementById("curveview").offsetHeight;
+
+var svgc = d3.select("#curveview")
+      .append("svg")
+      .attr("width", svgcw)
+      .attr("height", svgch);
+
+//两井自主连线
+var svgkw=document.getElementById("kview").offsetWidth, 
+    svgkh=document.getElementById("kview").offsetHeight;
+
+var svgk= d3.select("#kview")
+      .append("svg")
+      .attr("width", svgkw)
+      .attr("height", svgkh);
+
+//三角剖分
+var voronoi = d3.voronoi();
+voronoi.x(function x(d) {return d.posx;});
+voronoi.y(function y(d) {return d.posy;});
+
+var linkdata = voronoi.links(welldata);
+
+//绘制三角剖分的连边//////////////////////////////////////////////////////////////////////////////////////
+for(var i = 0; i<linkdata.length; i++) {
+  welldata[linkdata[i].source.indexn].linkids.push(linkdata[i].target.indexn);
+  welldata[linkdata[i].target.indexn].linkids.push(linkdata[i].source.indexn);
+
+  //统计匹配程度，深度或者层数
+  var countlayers=0,countdepths=0.0;
+  for(var tm=0;tm<welldata[linkdata[i].source.indexn].Data.length;tm++)
+    for(var tn=0;tn<welldata[linkdata[i].target.indexn].Data.length;tn++) {
+      if(welldata[linkdata[i].source.indexn].Data[tm].Flag==welldata[linkdata[i].target.indexn].Data[tn].Flag) {
+        countlayers++;
+        countdepths+=welldata[linkdata[i].source.indexn].Data[tm].Sandstone;
+        countdepths+=welldata[linkdata[i].target.indexn].Data[tn].Sandstone;
+      }
+    }
+
+  linkdata[i].countlayers=countlayers;
+  linkdata[i].countdepths=countdepths;
+
+  var linkid;
+
+  if(linkdata[i].source.indexn>linkdata[i].target.indexn) linkid="lid"+linkdata[i].target.indexn+"to"+linkdata[i].source.indexn;
+  else linkid="lid"+linkdata[i].source.indexn+"to"+linkdata[i].target.indexn;
+
+  linkdata[i].id=linkid;
+}
+
+var maxcountlayers=d3.max(linkdata,function(d){return d.countlayers;}),
+    mincountlayers=d3.min(linkdata,function(d){return d.countlayers;});
+
+var LayersScale = d3.scaleLinear().domain([mincountlayers, maxcountlayers]).range([0.0, 1.0]);
+
+var colora = d3.rgb(255,0,0);     //红色
+var colorb = d3.rgb(0,0,255);     //绿色
+var computec = d3.interpolate(colora,colorb);
+
+//绘制热力图///////////////////////////////////////////////////////////////////////////////////////////
+gwells.selectAll("img")
+    .data([0])
+    .enter()
+    .append("svg:image")
+    .attr("id", "heat_map")
+    .attr("xlink:href", "file:img/heatmap.png")
+    .attr("x", "0")
+    .attr("y", "0")
+    .attr("width", Length)
+    .attr("height", Length)
+    .attr("opacity", 0);
+        
+//等高线绘制///////////////////////////////////////////////////////////////////////////////////////////
+
+//基本数据/////
+well_name = ['null', 'NG1+21', 'NG1+210', 'NG1+211', 'NG1+212', 'NG1+213', 'NG1+214', 'NG1+22', 'NG1+23', 'NG1+24', 'NG1+25', 'NG1+26', 'NG1+27', 'NG1+28', 'NG1+29', 'NG31', 'NG32', 'NG33', 'NG34', 'NG35', 'NG41', 'NG42', 'NG43', 'NG44', 'NG51', 'NG52', 'NG53', 'NG54', 'NG55', 'NG56', 'NG61+2', 'NG63', 'NG64', 'NG65'];
+
+//绘制井连线////////////////////////////////////////////////////////////////////////////////////////////
+gwells.selectAll("line")
+      .data(linkdata)
+      .enter()
+      .append("line")
+      .attr("id", function(d){ return d.id;})
+      .attr("x1", function(d){ return FlagScalex(welldata[d.source.indexn].posx);})
+      .attr("y1", function(d){ return FlagScaley(welldata[d.source.indexn].posy);})
+      .attr("x2", function(d){ return FlagScalex(welldata[d.target.indexn].posx);})
+      .attr("y2", function(d){ return FlagScaley(welldata[d.target.indexn].posy);})
+      .attr("stroke","lightskyblue") //function(d){ return computec(LayersScale(d.countlayers));}
+      .attr("stroke-width",1.0)
+      .attr("stroke-opacity",1.0)
+      .attr("opacity", 0); //function(d){ return LayersScale(d.countlayers);}
+
+//排序函数//////////////////////////////////////////////////////////////////////////////////////////
+function sort(Array_sort, Array_name) {
+  for(var i = 0; i < Array_sort.length; i++)
+    for(var j = 0; j < Array_sort.length-i-1; j++)
+      if(Array_sort[j]<Array_sort[j+1]) {
+        var temp = Array_sort[j];
+        Array_sort[j] = Array_sort[j+1];
+        Array_sort[j+1] = temp;
+	      temp = Array_name[j];
+        Array_name[j] = Array_name[j+1];
+        Array_name[j+1] = temp;
+      }
+}
+
+//存储1时最后选取的点
+var click_last;
+
+//判断是否在当前状态有操作
+var click_dic = false;
+//用于存放被点击的点id号
+var click_arr = [];
+
+//用于判断绘制模式(1为三角剖分绘制，2为水平绘制，3为自定义设置)
+var switch_mode = 1;
+
+document.getElementById("Optional").disabled = true;
+document.getElementById("Horizontal_drawing").disabled = true;
+// <button class = "btn btn-primary btn-block" id = "switch">三角剖分</button>
+// <button class = "btn btn-block" id = "Horizontal_drawing" disabled="true">水平自定义</button>
+// <button class = "btn btn-block" id = "Optional" disabled="true">立体自定义</button> 
+
+//绘制所有油田节点/////////////////////////////////////////////////////////////////////
+var circles_color = "#8A2BE2";
+var circles = gwells.selectAll("circle")
+      .data(welldata)
+      .enter()
+      .append("circle")
+      .attr("id",function(d){ return "wid"+d.indexn; })
+      .attr("fill", circles_color)
+      .attr("stroke", circles_color)
+      .attr("stroke-width",0.5)
+      .attr("r",1.5)
+      .attr("opacity", 1)
+      .attr("cx",function(d) { return FlagScalex(d.posx); })
+      .attr("cy",function(d) { return FlagScaley(d.posy); })
+      .on("click",function(d,i){
+        //立体绘制模式////////////////////////////////////////////////////////////////
+        if(switch_mode == 1)
+        {
+          svgd.selectAll(".g-detail").remove();
+          var gDetail = svgd.append("g").classed("g-detail", true);
+
+          //存在选取点(变回原先的颜色)
+          if(click_last)
+          {
+            d3.select("#wid"+click_last.indexn).attr("fill", circles_color);
+
+            var linkma = [];  //记录画点顺序(x>x0)
+            var linkma_name = [];
+
+            var linkmi = [];  //记录画点顺序(x<x0)
+            var linkmi_name = [];
+
+            var x1 = click_last.posx;
+            var y1 = click_last.posy;
+
+            for(var k=0;k<click_last.linkids.length;k++)
+            {
+              var x2 = welldata[click_last.linkids[k]].posx;
+              var y2 = welldata[click_last.linkids[k]].posy;
+
+              var tan = (y2-y1)/(x2-x1);
+
+              if(x2>x1) {
+                linkma.push(tan);
+                linkma_name.push(click_last.linkids[k]);
+              } else {
+                linkmi.push(tan);
+                linkmi_name.push(click_last.linkids[k]);
+              }
+
+              d3.select("#wid"+click_last.linkids[k])
+                .attr("fill", circles_color);
+
+              var linkid;
+              if(click_last.indexn > click_last.linkids[k]) linkid = "#lid" + click_last.linkids[k]+"to"+click_last.indexn;
+              else linkid = "#lid" + click_last.indexn + "to" + click_last.linkids[k];
+
+              d3.select(linkid)
+                .attr("stroke","lightskyblue");
+              console.log(link_click);
+              if(link_click == 0) d3.select(linkid).attr("opacity", 0);
+              else d3.select(linkid).attr("opacity", 1);
+            }
+
+            sort(linkma, linkma_name);
+            sort(linkmi, linkmi_name);
+
+            for(var i = 0; i<linkmi_name.length;i++)
+              linkma_name.push(linkmi_name[i]);
+
+            for(var k=0;k<linkma_name.length;k++) {
+              var num = linkma_name.length;
+              if(linkma_name[k] < linkma_name[((k+1)%num)]) linkidnew = "#lid" + linkma_name[k] + "to" + linkma_name[((k+1)%num)];
+              else linkidnew = "#lid" + linkma_name[((k+1)%num)] + "to" + linkma_name[k];
+
+              d3.select(linkidnew)
+            	.attr("stroke","lightskyblue");
+          	  if(link_click == 0) d3.select(linkidnew).attr("opacity", 0);
+          	  else d3.select(linkidnew).attr("opacity", 1);
+            }
+          }
+
+          //变红
+          d3.select(this).attr("fill","red");
+          var linkma = [];  //记录画点顺序(x>x0)
+          var linkma_name = [];
+
+          var linkmi = [];  //记录画点顺序(x<x0)
+          var linkmi_name = [];
+
+          //选取点的坐标
+          var x1 = welldata[d.indexn].posx;
+          var y1 = welldata[d.indexn].posy;
+
+          for(var k=0;k<d.linkids.length;k++)
+          {
+            var x2 = welldata[d.linkids[k]].posx;
+            var y2 = welldata[d.linkids[k]].posy;
+
+            var tan = (y2-y1)/(x2-x1);
+            //判断x点与选取点的相对位置，分开存放
+            if(x2>x1) {
+              linkma.push(tan);
+              linkma_name.push(d.linkids[k]);
+            } else {
+              linkmi.push(tan);
+              linkmi_name.push(d.linkids[k]);
+            }
+
+            d3.select("#wid"+d.linkids[k])
+              .attr("fill","red");
+
+            var linkid;
+            if(d.indexn > d.linkids[k]) linkid = "#lid" + d.linkids[k]+"to"+d.indexn;
+            else linkid = "#lid" + d.indexn + "to" + d.linkids[k];
+
+            d3.select(linkid)
+              .attr("opacity", 1)
+              .attr("stroke", "red");
+          }
+
+          sort(linkma, linkma_name);
+          sort(linkmi, linkmi_name);
+
+          for(var i = 0; i<linkmi_name.length;i++)
+            linkma_name.push(linkmi_name[i]);
+
+          for(var k = 0;k<linkma_name.length;k++) {
+            var num = linkma_name.length;
+
+            if(linkma_name[k] < linkma_name[((k+1)%num)]) linkidnew = "#lid" + linkma_name[k] + "to" + linkma_name[((k+1)%num)];
+            else linkidnew = "#lid" + linkma_name[((k+1)%num)] + "to" + linkma_name[k];
+
+            svg.select(linkidnew)
+               .attr("opacity", 1)
+               .attr("stroke","red");
+          }
+          showwells(d);
+          click_last = d;
+        }
+        //水平绘制
+        else if(switch_mode == 2)
+        {
+          if(click_dic == 1) {
+            for(var i = 0; i < click_arr.length-1; i++)
+              svg.select("#line_choose"+click_arr[i].indexn+"to"+click_arr[i+1].indexn).remove();
+            for(var i = 0; i < click_arr.length; i++)
+              svg.select("#wid"+click_arr[i].indexn)
+                 .attr("stroke",circles_color);
+            click_arr = [];
+            click_dic = 0;
+          }
+
+          d3.select(this)
+            .attr("stroke","red");
+
+          //划线函数
+          if(click_arr.length >= 1)
+            draw_choose_line(click_arr[click_arr.length-1],d);
+          click_arr.push(d);
+        }
+        //自定义绘制
+        else if(switch_mode == 3)
+        {
+          if(click_dic == 1) {
+            for(var i = 0; i < click_arr.length-1; i++)
+              svg.select("#line_choose"+click_arr[i].indexn+"to"+click_arr[i+1].indexn).remove();
+            for(var i = 0; i < click_arr.length; i++)
+              svg.select("#wid"+click_arr[i].indexn)
+                 .attr("stroke",circles_color);
+            click_arr = [];
+            click_dic = 0;
+          }
+
+          d3.select(this)
+            .attr("stroke","red");
+
+          //划线函数
+          if(click_arr.length%2 == 1)
+            draw_choose_line(click_arr[click_arr.length-1],d);
+          click_arr.push(d);
+        }
+      });
+
+  //按钮效果//////////////////////////////////////////////////////////////////////////
+
+  //1.还原当前状态
+  //2.变化为下一状态
+  d3.select("#switch")
+    .on("click",function() {
+      //当前绘制模式为三角剖分
+      if(switch_mode == 1) { //当前绘制模式为选取点周边立体绘制，1->2
+        //还原当前状态的状态
+        if(click_last)
+        {
+          d3.select("#wid"+click_last.indexn).attr("fill",circles_color);
+
+          var linkma = [];  //记录画点顺序(x>x0)
+          var linkma_name = [];
+          var linkmi = [];  //记录画点顺序(x<x0)
+          var linkmi_name = [];
+
+          var x1 = click_last.posx;
+          var y1 = click_last.posy;
+
+          for(var k=0;k<click_last.linkids.length;k++)
+          {
+            var x2 = welldata[click_last.linkids[k]].posx;
+            var y2 = welldata[click_last.linkids[k]].posy;
+
+            var tan = (y2-y1)/(x2-x1);
+
+            if(x2>x1) {
+              linkma.push(tan);
+              linkma_name.push(click_last.linkids[k]);
+            } else {
+              linkmi.push(tan);
+              linkmi_name.push(click_last.linkids[k]);
+            }
+
+            d3.select("#wid"+click_last.linkids[k])
+              .attr("fill",circles_color);
+
+            var linkid;
+            if(click_last.indexn > click_last.linkids[k]) linkid = "#lid" + click_last.linkids[k]+"to"+click_last.indexn;
+            else linkid = "#lid" + click_last.indexn + "to" + click_last.linkids[k];
+        
+            d3.select(linkid)
+              .attr("stroke","lightskyblue");
+            
+            if(link_click == 0) d3.select(linkid).attr("opacity", 0);
+            else d3.select(linkid).attr("opacity", 1);
+          }
+
+          sort(linkma, linkma_name);
+          sort(linkmi, linkmi_name);
+
+          for(var i = 0; i<linkmi_name.length;i++)
+            linkma_name.push(linkmi_name[i]);
+
+          for(var k=0;k<linkma_name.length;k++) {
+            var num = linkma_name.length;
+            if(linkma_name[k] < linkma_name[((k+1)%num)]) linkidnew = "#lid" + linkma_name[k] + "to" + linkma_name[((k+1)%num)];
+            else linkidnew = "#lid" + linkma_name[((k+1)%num)] + "to" + linkma_name[k];
+             
+            d3.select(linkidnew)
+              .attr("stroke","lightskyblue");
+            if(link_click == 0) d3.select(linkidnew).attr("opacity", 0);
+            else d3.select(linkidnew).attr("opacity", 1);
+          }
+        }
+        //变成第二状态
+        switch_mode = 2;
+        document.getElementById("Horizontal_drawing").disabled=false;
+      }
+
+      //当前绘制模式为水平绘制
+      else if(switch_mode == 2) {
+        //清除当前状态
+        if(click_dic == true)
+        {
+          for(var i = 0; i < click_arr.length-1; i++)
+            svg.select("#line_choose"+click_arr[i].indexn+"to"+click_arr[i+1].indexn).remove();
+          for(var i = 0; i < click_arr.length; i++)
+            svg.select("#wid"+click_arr[i].indexn)
+               .attr("stroke",circles_color);
+          click_arr = [];
+          click_dic = false;
+        }
+        
+        //变化为下一状态
+        switch_mode = 3;
+        document.getElementById("Optional").disabled = false;
+        document.getElementById("Horizontal_drawing").disabled = true;
+      }
+      else if(switch_mode==3) {
+        //清除当前状态
+        if(click_dic == true)
+        {
+          for(var i = 0; i < click_arr.length-1; i++)
+            svg.select("#line_choose"+click_arr[i].indexn+"to"+click_arr[i+1].indexn).remove();
+          for(var i = 0; i < click_arr.length; i++)
+            svg.select("#wid"+click_arr[i].indexn)
+               .attr("stroke",circles_color);
+          click_arr = [];
+          click_dic = false;
+        }
+        
+        //变化为下一状态
+        switch_mode = 1;
+        document.getElementById("Optional").disabled = true;
+        document.getElementById("Horizontal_drawing").disabled = true;
+      }
+    });
+
+  d3.select("#Horizontal_drawing")
+    .on("click",function() {
+   	  Horizontal_draw(click_arr);
+   	  click_dic = true;
+  });
+
+  d3.select("#Optional")
+    .on("click",function() {
+      optional_draw(click_arr);
+      click_dic = true;
+    })
+
+  //热力图展示///////////////////////////////////////////////////////////////////////////////////
+  var heatmap_click = 0;
+  d3.select("#heatmap")
+    .on("click",function() {
+      if(heatmap_click == 0) {
+      	gwells.select("#heat_map")
+      		.attr("opacity", 1);
+      	gwells.selectAll("circle")
+      		.attr("opacity", 0.5);
+      	heatmap_click = 1;
+      } else {
+      	gwells.select("#heat_map")
+      		.attr("opacity", 0);
+      	gwells.selectAll("circle")
+      		.attr("opacity", 1);
+      	heatmap_click = 0;
+      }
+    });
+
+  //link_line按钮操作/////////////////////////////////////////////////////////////////////////
+  var link_click = 0;
+  d3.select("#link_line")
+    .on("click",function() {
+    	if(link_click == 0) {
+    		gwells.selectAll("line")
+    			  .attr("opacity", 1);
+    	    link_click = 1;
+    	} else {
+    		gwells.selectAll("line")
+    			  .attr("opacity", 0);
+    	    link_click = 0;
+    	}
+
+    	if(click_last)
+    	{
+        //变红
+        d3.select("#wid"+click_last.indexn).attr("fill","red");
+
+        var linkma = [];  //记录画点顺序(x>x0)
+        var linkma_name = [];
+
+        var linkmi = [];  //记录画点顺序(x<x0)
+        var linkmi_name = [];
+
+        //选取点的坐标
+        var x1 = welldata[click_last.indexn].posx;
+        var y1 = welldata[click_last.indexn].posy;
+
+        for(var k=0;k<click_last.linkids.length;k++)
+        {
+          var x2 = welldata[click_last.linkids[k]].posx;
+          var y2 = welldata[click_last.linkids[k]].posy;
+
+          var tan = (y2-y1)/(x2-x1);
+          //判断x点与选取点的相对位置，分开存放
+          if(x2>x1) {
+            linkma.push(tan);
+            linkma_name.push(click_last.linkids[k]);
+          } else {
+            linkmi.push(tan);
+            linkmi_name.push(click_last.linkids[k]);
+          }
+
+          d3.select("#wid"+click_last.linkids[k])
+            .attr("fill","red");
+
+          var linkid;
+          if(click_last.indexn > click_last.linkids[k]) linkid = "#lid" + click_last.linkids[k]+"to"+click_last.indexn;
+          else linkid = "#lid" + click_last.indexn + "to" + click_last.linkids[k];
+
+          d3.select(linkid)
+            .attr("opacity", 1)
+            .attr("stroke", "red");
+        }
+
+        sort(linkma, linkma_name);
+        sort(linkmi, linkmi_name);
+
+        for(var i = 0; i<linkmi_name.length;i++)
+          linkma_name.push(linkmi_name[i]);
+
+        for(var k = 0;k<linkma_name.length;k++) {
+          var num = linkma_name.length;
+
+          if(linkma_name[k] < linkma_name[((k+1)%num)]) linkidnew = "#lid" + linkma_name[k] + "to" + linkma_name[((k+1)%num)];
+          else linkidnew = "#lid" + linkma_name[((k+1)%num)] + "to" + linkma_name[k];
+
+          svg.select(linkidnew)
+             .attr("opacity", 1)
+             .attr("stroke","red");
+        }
+      }
+    })
+
+  //等高线按钮点击条件////////////////////////////////////////////////////////////////////////
+  d3.select("#contour")
+    .on("click",function() {
+      
+      contour_g.selectAll("path").remove();
+	  contour_g.selectAll("text").remove();
+
+      var select = document.getElementById("stratum_select");
+      var well_select = select.value;
+
+      want_NG = stratum_list[well_name.indexOf(well_select)];
+
+      //分割的数量(边数)
+      var divide = 11;
+
+      //存放需要井的位置以及value信息
+      var NG_place = [];
+
+      //每个格子的大小
+      var Div_w = Length/(divide - 1);
+
+      //分离所有点至divide的平方个Array中
+      var NG_div = new Array;
+      for(var i = 0; i< Math.pow(divide-1,2); i++)
+        NG_div[i] = new Array;
+
+      //保存最小value值
+      var min_land = 10000;
+      //保存最大value值
+      var max_land = 100;
+
+      //循环遍历列表，分割数据，加快遍历速度
+      for(var i = 0; i<want_NG.length; i++) {
+        NG = {};//单个目标井临时存放用
+        j = want_NG[i];
+        NG.x = FlagScalex(welldata[j].posx);
+        NG.y = FlagScaley(welldata[j].posy);
+        var idx = parseInt(NG.x/Div_w);
+        var idy = parseInt(NG.y/Div_w);
+        for(var k = 0; k<welldata[j].Data.length; k++)
+          if(welldata[j].Data[k].Flag == well_select) {
+            var val = parseInt(welldata[j].Data[k].Top_depth);//用该层的上顶部作为value
+            NG.value = val;
+            if(min_land > val) 
+              min_land = val; 
+            if(max_land < val) 
+              max_land = val; 
+            break; 
+          }
+        var id = idx+idy*(divide-1);
+        NG_div[id].push(NG);
+      }
+
+      //初始化网格上每个点为最小值
+      var cliff = min_land;
+      data = [];
+      for(var j = 0; j<divide; j++) {
+        data_1 = [];
+        for(var i = 0; i<divide; i++)
+          data_1.push(cliff);
+        data.push(data_1);
+      }
+
+      //网格点赋值(判断)处理
+      for(var j = 1; j<divide-1; j++)
+        for(var i = 1; i<divide-1; i++) {
+          var Most_close_point = 10000; //存放最接近点距离
+
+          //左上方格子
+          var pl_1 = (i-1)+(j-1)*(divide-1);
+          for(var k = 0; k<NG_div[pl_1].length; k++) {
+            var leng = Math.pow(NG_div[pl_1][k].x-i*Div_w,2) + Math.pow(NG_div[pl_1][k].y-j*Div_w,2);
+            if(leng < Most_close_point) {
+              data[i][j] = NG_div[pl_1][k].value;
+              Most_close_point = leng;
+            }
+          }
+
+          //右上方格子
+          var pl_2 = i+(j-1)*(divide-1);
+          for(var k = 0; k<NG_div[pl_2].length; k++) {
+            var leng = Math.pow(NG_div[pl_2][k].x-i*Div_w,2) + Math.pow(NG_div[pl_2][k].y-j*Div_w,2);
+            if(leng < Most_close_point) {
+              data[i][j] = NG_div[pl_2][k].value;
+              Most_close_point = leng;
+            }
+          }
+
+          //左下方格子
+          var pl_3 = (i-1)+j*(divide-1);
+          for(var k = 0; k<NG_div[pl_3].length; k++) {
+            var leng = Math.pow(NG_div[pl_3][k].x-i*Div_w,2) + Math.pow(NG_div[pl_3][k].y-j*Div_w,2);
+            if(leng < Most_close_point) {
+              data[i][j] = NG_div[pl_3][k].value;
+              Most_close_point = leng;
+            }
+          }
+
+          //右下方格子
+          var pl_4 = i+j*(divide-1);
+          for(var k = 0 ; k<NG_div[pl_4].length; k++) {
+            var leng = Math.pow(NG_div[pl_4][k].x-i*Div_w,2) + Math.pow(NG_div[pl_4][k].y-j*Div_w,2);
+            if(leng < Most_close_point) {
+              data[i][j] = NG_div[pl_4][k].value;
+              Most_close_point = leng;
+            }
+          }
+      }
+	  
+	  var dif_width = document.getElementById("difference").value;
+
+      var c = new Conrec,
+        xs = d3.range(0, data.length),
+        ys = d3.range(0, data[0].length),
+        zs = d3.range(min_land, max_land,dif_width),
+        x = d3.scaleLinear().range([0, Length]).domain([0, data.length]),
+        y = d3.scaleLinear().range([0, Length]).domain([0, data[0].length]),
+        colours = d3.scaleLinear().domain([min_land, max_land]).range(["#F8F8FF", "#FF0000"]);
+		
+      c.contour(data, 0, xs.length - 1, 0, ys.length - 1, xs, ys, zs.length, zs);
+
+      draw_list = [];
+      for(var i = 0; i<c.contourList().length;i++) {
+        if(c.contourList()[i].level != min_land)
+          draw_list.push(c.contourList()[i]);
+      }
+
+      contour_g.selectAll("path")
+        .data(draw_list)
+        .enter().append("path")
+        .style("fill",function(d){return colours(d.level);})
+        .style("stroke","black")
+        .style("opacity", 0.5)
+        .attr("d", d3.line()
+                    .x(function(d) { return x(d.x); })
+                    .y(function(d) { return y(d.y); })
+                    .curve(d3['curveBasisClosed']));
+		for(var i = 0; i<draw_list.length;i++){
+		  contour_g.append("text")
+			.attr("x", x(draw_list[i][0].x))
+			.attr("y", y(draw_list[i][0].y))
+			.attr("dy", "0.55em")
+			.attr("text-anchor", "middle")
+			.attr("font-size", dif_width/2+"px")
+			.text(draw_list[i].level);
+		}
+  });
+    
+
+  //全局视图添加zoom交互//////////////////////////////////////////////////////////////////////
+  svg.call(d3.zoom().scaleExtent([1/2, 8]).on("zoom", zoomed_svg));
+
+  function zoomed_svg() {
+    gwells.attr("transform", d3.event.transform);
+    contour_g.attr("transform", d3.event.transform); 
+  }
+
+  //细节视图添加zoom交互////////////////////////////////////////////////////////////////////
+  svgd.call(d3.zoom().scaleExtent([1/2, 8]).on("zoom", zoomed_svgd));
+
+  function zoomed_svgd() { d3.selectAll(".g-detail").attr("transform", d3.event.transform); }
+
+  //两井匹配视图添加zoom交互////////////////////////////////////////////////////////////////
+  svgm.call(d3.zoom().scaleExtent([1/2, 8]).on("zoom", zoomed_svgm));
+
+  function zoomed_svgm() { d3.selectAll(".Grid").attr("transform", d3.event.transform); }
+
+  //颜色盘////////////////////////////////////////////////////////////////////////////////////
+  var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+  //将选取的点用红色连线连接起来/////////////////////////////////////////////////////////////
+  function draw_choose_line(obj_bef,obj) {
+    line_c = Math.sqrt(
+      Math.pow((FlagScalex(obj.posx)-FlagScalex(obj_bef.posx)),2)+
+      Math.pow((FlagScaley(obj.posy)-FlagScaley(obj_bef.posy)),2));
+
+    var change_x = ((FlagScalex(obj.posx)-FlagScalex(obj_bef.posx))/line_c)*1.5;
+    var change_y = ((FlagScaley(obj.posy)-FlagScaley(obj_bef.posy))/line_c)*1.5;
+    
+
+  	gwells.append("line")
+  		  .attr("id","line_choose"+obj_bef.indexn+"to"+obj.indexn)
+  	      .attr("x1", FlagScalex(obj_bef.posx)+change_x)
+  	      .attr("y1", FlagScaley(obj_bef.posy)+change_y)
+  	      .attr("x2", FlagScalex(obj.posx)-change_x)
+  	      .attr("y2", FlagScaley(obj.posy)-change_y)
+  	      .attr("stroke","red")
+          .attr("stroke-width",1);
+  };
+
+  //绘制水平井函数/////////////////////////////////////////////////////////////////////////
+  function highlight() {
+    var classflag=d3.select(this).attr("class");
+    var isclass=d3.selectAll(".path"+classflag.substr(4)).classed("hidden");
+    d3.selectAll(".path"+classflag.substr(4)).classed("hidden",!isclass);
+  }
+
+  function Horizontal_draw(click_arr) {
+
+    svgd.selectAll(".g-detail").remove();
+    var gDetail = svgd.append("g").classed("g-detail", true);
+
+    var well_width=50;  //井宽
+    var well_height=300;
+    var interval=50;  //井间隔
+
+    //第一口井的位置
+    var startx = 30;
+    var starty = 30;
+
+    //需要绘制的数量
+    var well_num = click_arr.length;
+
+    //构建比例尺
+    var topall = [];
+    var bottenall = [];
+
+    for(var i = 0; i<well_num; i++)
+    {
+      topall.push(welldata[click_arr[i].indexn].Data[0].Top_depth);
+      var j=welldata[click_arr[i].indexn].Data.length-1;
+      bottenall.push(welldata[click_arr[i].indexn].Data[j].Bot_depth);
+    }
+
+    var FlagScale_detail = d3.scaleLinear().domain([d3.min(topall), d3.max(bottenall)]).range([0, well_height]);
+
+    for(var i=0;i<well_num;i++)
+    {
+      gDetail.append("rect")
+        .attr("x", startx+(well_width+interval)*i)
+        .attr("y", starty)
+        .attr("width", well_width)
+        .attr("height", well_height)
+        .attr("stroke","black")
+        .attr("stroke-width",1.5)
+        .attr("fill","none");
+
+      gDetail.append("text")
+        .attr("x", startx+(well_width+interval)*i+well_width/2)
+        .attr("y", starty)
+        .attr("dy", "-0.35em")
+        .attr("text-anchor", "middle")
+        .text(click_arr[i].ID);
+
+      for(var j=0;j<welldata[click_arr[i].indexn].Data.length;j++) {
+        gDetail.append("rect")
+            .attr("class", "rect"+welldata[click_arr[i].indexn].Data[j].Flag)
+            .attr("x", startx+(well_width+interval)*i)
+            .attr("y", starty+FlagScale_detail(welldata[click_arr[i].indexn].Data[j].Top_depth))
+            .attr("width", well_width)
+            .attr("height", FlagScale_detail(welldata[click_arr[i].indexn].Data[j].Bot_depth)-FlagScale_detail(welldata[click_arr[i].indexn].Data[j].Top_depth))
+            .attr("stroke","black")
+            .attr("stroke-width",1.0)
+            .attr("fill",color(FlagGroup.indexOf(welldata[click_arr[i].indexn].Data[j].Flag) % 20 ))
+            .on("click",highlight);
+      }
+    }
+
+    //同层连线///////////////////////////////////////////////////////////////////////////////////////////////
+    for(var i=0;i<well_num-1;i++)
+    {
+      for(var j = 0; j<welldata[click_arr[i].indexn].Data.length; j++)  
+        for(var k = 0; k<welldata[click_arr[i+1].indexn].Data.length; k++)
+        {
+          if(welldata[click_arr[i].indexn].Data[j].Flag == welldata[click_arr[i+1].indexn].Data[k].Flag)
+          {
+
+            var layerpoints=[];
+
+            layerpoints.push([startx+(well_width+interval)*i+well_width,
+                             starty+FlagScale_detail(welldata[click_arr[i].indexn].Data[j].Top_depth)]);
+            layerpoints.push([startx+(well_width+interval)*(i+1), 
+                              starty+FlagScale_detail(welldata[click_arr[i+1].indexn].Data[k].Top_depth)]);
+            layerpoints.push([startx+(well_width+interval)*(i+1),
+                              starty+FlagScale_detail(welldata[click_arr[i+1].indexn].Data[k].Bot_depth)]);
+            layerpoints.push([startx+(well_width+interval)*i+well_width,
+                              starty+FlagScale_detail(welldata[click_arr[i].indexn].Data[j].Bot_depth)]);
+
+            gDetail.append("path")
+                  .attr("class", "path"+welldata[click_arr[i].indexn].Data[j].Flag)
+                  .attr("d", surface(layerpoints))
+                  .attr("stroke", "none")
+                  .attr("fill", color(FlagGroup.indexOf(welldata[click_arr[i].indexn].Data[j].Flag) % 20 ));
+          }
+        }
+    }
+  }
+
+  function optional_draw(click_arr) {
+    svgd.selectAll(".g-detail").remove();
+    var gDetail = svgd.append("g").classed("g-detail", true);
+
+    var click_arr_place = [];
+
+    for(var i=0; i<click_arr.length; i++)
+      click_arr_place.push([click_arr[i].posx,click_arr[i].posy]);
+
+    var minposxd = d3.min(click_arr_place,function(d){ return d[0]; }),
+        minposyd = d3.min(click_arr_place,function(d){ return d[1]; }),
+        maxposxd = d3.max(click_arr_place,function(d){ return d[0]; }),
+        maxposyd = d3.max(click_arr_place,function(d){ return d[1]; });
+
+    var main_well_width = 20,main_well_height = 100;
+
+    var FlagScalex_op = d3.scaleLinear().domain([minposxd,maxposxd]).range([svgdw*0.1, svgdw*0.9]);
+    var FlagScaley_op = d3.scaleLinear().domain([minposyd,maxposyd]).range([svgdh*0.1, svgdh*0.7]);
+
+    //存放上层与下层，构建比例尺
+    var topall = [];
+    var bottenall = [];
+
+    for(var i=0; i<click_arr.length; i++)
+    {
+      topall.push(click_arr[i].Data[0].Top_depth);
+      bottenall.push(click_arr[i].Data[click_arr[i].Data.length-1].Bot_depth);
+    }
+
+    //比例尺
+    var FlagScale_well = d3.scaleLinear().domain([d3.min(topall), d3.max(bottenall)]).range([0, main_well_height]);
+
+    //循环遍历连接井
+    for(var i=0; i<click_arr.length; i++)
+    {
+      click_arr[i].x = FlagScalex_op(click_arr[i].posx);
+      click_arr[i].y = FlagScaley_op(click_arr[i].posy);
+
+      //连接井的边框
+      gDetail.append("rect")
+          .attr("id","Rect"+click_arr[i].indexn)
+          .attr("x", click_arr[i].x)
+          .attr("y", click_arr[i].y)
+          .attr("width", main_well_width)
+          .attr("height", main_well_height)
+          .attr("stroke", "black")
+          .attr("stroke-width", 0.2)
+          .attr("fill", "none");
+
+      //井的分层
+      for(var j=0;j<click_arr[i].Data.length;j++)
+        gDetail.append("rect")
+            .attr("class", "rect"+click_arr[i].Data[j].Flag)
+            .attr("id","rect"+click_arr[i].indexn+"of"+j)
+            .attr("x", click_arr[i].x)
+            .attr("y", click_arr[i].y+FlagScale_well(click_arr[i].Data[j].Top_depth))
+            .attr("width", main_well_width)
+            .attr("height", FlagScale_well(click_arr[i].Data[j].Bot_depth)-FlagScale_well(click_arr[i].Data[j].Top_depth))
+            .attr("stroke","black")
+            .attr("stroke-width",0.5)
+            .attr("fill",color(FlagGroup.indexOf(click_arr[i].Data[j].Flag) % 20 ))
+            .on("click",highlight);
+
+    }
+
+    for(var i=0; i<click_arr.length-1; i=i+2) {
+      for(var j=0; j<click_arr[i].Data.length;j++)
+        for(var k = 0; k < click_arr[i+1].Data.length; k++)
+          if(click_arr[i].Data[j].Flag == click_arr[i+1].Data[k].Flag) {
+            var points = [
+            [main_well_width/2+click_arr[i].x,click_arr[i].y+FlagScale_well(click_arr[i].Data[j].Top_depth)],
+            [main_well_width/2+click_arr[i].x,click_arr[i].y+FlagScale_well(click_arr[i].Data[j].Bot_depth)],
+            [main_well_width/2+click_arr[i+1].x,click_arr[i+1].y+FlagScale_well(click_arr[i+1].Data[k].Bot_depth)],
+            [main_well_width/2+click_arr[i+1].x,click_arr[i+1].y+FlagScale_well(click_arr[i+1].Data[k].Top_depth)]];
+
+            var lineGraph = gDetail.append("path")
+                  .attr("class", "path"+click_arr[i].Flag)
+                  .attr("id", "click_line"+click_arr[i].indexn+"of"+j+"to"+click_arr[i+1].indexn+"of"+k)
+                  .attr("d", surface(points))
+                  .attr("stroke", color(FlagGroup.indexOf(click_arr[i].Data[j].Flag) % 20))
+                  .attr("stroke-width", 0)
+                  .attr("fill", color(FlagGroup.indexOf(click_arr[i].Data[j].Flag) % 20));
+
+            break;
+        }
+
+    }
+    gDetail.selectAll(".drag")
+          .data(click_arr)
+          .enter()
+          .append("circle")
+          .attr("class","drag")
+          .attr("fill","red")
+          .attr("r",4)
+          .attr("cx",function(d){ return FlagScalex_op(d.posx);})
+          .attr("cy",function(d){ return FlagScaley_op(d.posy);});
+        
+    gDetail.selectAll(".wname")
+        .data(click_arr)
+        .enter()
+        .append("text")
+        .attr("class","wname")
+        .attr("id",function(d){ return "Wname"+d.ID;})
+        .attr("x",function(d){ return FlagScalex_op(d.posx);})
+        .attr("y",function(d){ return FlagScaley_op(d.posy);})
+        .attr("dy","-0.35em")
+        .attr("text-anchor", "end")
+        .text(function(d){ return d.ID;});
+
+     //拖拽功能////////////////////////////////////////////////////////////////////
+    gDetail.selectAll(".drag").call(d3.drag().on("drag", dragged));
+
+    function dragged(d) {
+      for(var i = 0; i<click_arr.length;i++) if(click_arr[i].indexn == d.indexn) break;
+
+      d3.select(this).attr("cx", d.x=d3.event.x).attr("cy", d.y=d3.event.y);
+      d3.select("#Rect"+d.indexn).attr("x", d.x).attr("y", d.y);
+      d3.select("#Wname"+d.ID).attr("x", d.x).attr("y", d.y);
+
+      for(var j=0;j<click_arr[i].Data.length;j++) {
+        d3.select("#rect"+d.indexn+"of"+j)
+          .attr("x", d.x)
+          .attr("y", d.y+FlagScale_well(click_arr[i].Data[j].Top_depth));
+      }
+
+      if(i%2 == 0)
+      {
+        for (var j = 0; j < click_arr[i].Data.length; j++)
+          for(var k = 0; k < click_arr[i+1].Data.length; k++)
+            if(click_arr[i].Data[j].Flag == click_arr[i+1].Data[k].Flag)
+            {
+              var points = [[click_arr[i+1].x+main_well_width/2,click_arr[i+1].y+FlagScale_well(click_arr[i+1].Data[k].Top_depth)],
+                            [click_arr[i+1].x+main_well_width/2,click_arr[i+1].y+FlagScale_well(click_arr[i+1].Data[k].Bot_depth)],
+                            [d.x+main_well_width/2,d.y+FlagScale_well(d.Data[j].Bot_depth)],
+                            [d.x+main_well_width/2,d.y+FlagScale_well(d.Data[j].Top_depth)]];
+
+              d3.select("#click_line"+click_arr[i].indexn+"of"+j+"to"+click_arr[i+1].indexn+"of"+k)
+                .attr("d", surface(points));
+
+              break;
+            }
+      } else if(i%2 == 1) {
+        for (var j = 0; j < click_arr[i].Data.length; j++)
+          for(var k = 0; k < click_arr[i-1].Data.length; k++)
+            if(click_arr[i].Data[j].Flag == click_arr[i-1].Data[k].Flag)
+            {
+              var points = [[click_arr[i-1].x+main_well_width/2,click_arr[i-1].y+FlagScale_well(click_arr[i-1].Data[k].Top_depth)],
+                            [click_arr[i-1].x+main_well_width/2,click_arr[i-1].y+FlagScale_well(click_arr[i-1].Data[k].Bot_depth)],
+                            [d.x+main_well_width/2,d.y+FlagScale_well(d.Data[j].Bot_depth)],
+                            [d.x+main_well_width/2,d.y+FlagScale_well(d.Data[j].Top_depth)]];
+
+              d3.select("#click_line"+click_arr[i-1].indexn+"of"+k+"to"+click_arr[i].indexn+"of"+j)
+                .attr("d", surface(points));
+
+              break;
+            }
+      }
+    }
+      
+    
+  }
+
+  //在细节视图中展示多口井的星形排列及地层匹配////////////////////////////////////////
+  function showwells(obj) {
+    //清空绘制的元素////////////////
+    svgd.selectAll(".g-detail").remove();
+
+    var gDetail = svgd.append("g").classed("g-detail", true);
+
+    var posarray=[];
+
+    posarray.push([obj.posx,obj.posy]);
+
+    for(var k=0;k<obj.linkids.length;k++)
+    {
+      var temparray=[];
+      temparray.push(welldata[obj.linkids[k]].posx);
+      temparray.push(welldata[obj.linkids[k]].posy);
+
+      posarray.push(temparray);
+    }
+
+    var minposxd = d3.min(posarray,function(dd){ return dd[0]; }),
+        minposyd = d3.min(posarray,function(dd){ return dd[1]; }),
+        maxposxd = d3.max(posarray,function(dd){ return dd[0]; }),
+        maxposyd = d3.max(posarray,function(dd){ return dd[1]; });
+
+    var main_well_width = 20,main_well_height = 100;
+
+    var wd=svgdw-main_well_width,
+    	  hd=svgdh-main_well_height;
+
+    var FlagScalexd = d3.scaleLinear().domain([minposxd,maxposxd]).range([svgdw*0.1, svgdw*0.9]);
+    var FlagScaleyd = d3.scaleLinear().domain([minposyd,maxposyd]).range([svgdh*0.3, svgdh*0.9]);
+
+    var point0x = wd/2-FlagScalexd(minposxd)/2-FlagScalexd(maxposxd)/2;
+    var point0y = hd/2-FlagScaleyd(minposyd)/2-FlagScaleyd(maxposyd)/2;
+
+    var linkma = [];  //记录画点顺序(x>x0)
+    var linkma_name = [];
+
+    var linkmi = [];  //记录画点顺序(x<x0)
+    var linkmi_name = [];
+
+    //选取点的坐标
+    var x1 = welldata[obj.indexn].posx;
+    var y1 = welldata[obj.indexn].posy;
+
+    //记录每口井的不同层的深度
+    var topall = [];
+  	var bottenall = [];
+
+  	topall.push(welldata[obj.indexn].Top_depth);
+  	bottenall.push(welldata[obj.indexn].Bot_depth);
+
+    for(var k=0;k<obj.linkids.length;k++)
+    {
+      var x2 = welldata[obj.linkids[k]].posx;
+      var y2 = welldata[obj.linkids[k]].posy;
+
+      topall.push(welldata[obj.linkids[k]].Data[0].Top_depth);
+      var j=welldata[obj.linkids[k]].Data.length-1;
+      bottenall.push(welldata[obj.linkids[k]].Data[j].Bot_depth);
+
+      var tan = (y2-y1)/(x2-x1);
+      //判断x点与选取点的相对位置，分开存放
+      if(x2>x1) {
+        linkma.push(tan);
+        linkma_name.push(obj.linkids[k]);
+      } else {
+        linkmi.push(tan);
+        linkmi_name.push(obj.linkids[k]);
+      }
+    }
+
+    sort(linkma, linkma_name);
+    sort(linkmi, linkmi_name);
+
+    var lift_right_div = linkma_name.length;
+
+    for(var i = 0; i<linkmi_name.length;i++)
+      linkma_name.push(linkmi_name[i]);
+
+    //比例尺
+    var FlagScale = d3.scaleLinear().domain([d3.min(topall), d3.max(bottenall)]).range([0, main_well_height]);
+
+    //自定义数据，方便修改属性
+    var definedata=[];
+
+    var tempd={};
+    tempd.x=point0x+FlagScalexd(obj.posx);
+    tempd.y=point0y+FlagScaleyd(obj.posy);
+    tempd.id=obj.indexn;
+    tempd.wellname=welldata[tempd.id].ID;
+
+    definedata.push(tempd);
+
+    //当前井的边框
+    gDetail.append("rect")
+      .attr("id","Rect"+tempd.id)
+      .attr("x", point0x+FlagScalexd(obj.posx))
+      .attr("y", point0y+FlagScaleyd(obj.posy))
+      .attr("width", main_well_width)
+      .attr("height", main_well_height)
+      .attr("stroke","black")
+      .attr("stroke-width",0.2)
+      .attr("fill","none");
+
+    //当前井的分层
+    for(var j=0;j<welldata[obj.indexn].Data.length;j++) {
+      gDetail.append("rect")
+        .attr("class", "rect"+welldata[obj.indexn].Data[j].Flag)
+        .attr("id","rect"+tempd.id+"of"+j)
+        .attr("x", point0x+FlagScalexd(welldata[obj.indexn].posx))
+        .attr("y", point0y+FlagScaleyd(welldata[obj.indexn].posy)+FlagScale(welldata[obj.indexn].Data[j].Top_depth))
+        .attr("width", main_well_width)
+        .attr("height", FlagScale(welldata[obj.indexn].Data[j].Bot_depth)-FlagScale(welldata[obj.indexn].Data[j].Top_depth))
+        .attr("stroke","black")
+        .attr("stroke-width",0.2)
+        .attr("fill",color(FlagGroup.indexOf(welldata[obj.indexn].Data[j].Flag) % 20 ))
+        .on("click",highlight);
+    }
+
+    //循环遍历连接井
+  	for(var k=0;k<linkma_name.length;k++)
+  	{
+       //存放连接井的定位点数据
+        tempd={};
+        tempd.x=point0x+FlagScalexd(welldata[linkma_name[k]].posx);
+        tempd.y=point0y+FlagScaleyd(welldata[linkma_name[k]].posy);
+        tempd.id=linkma_name[k];
+        tempd.wellname=welldata[tempd.id].ID;
+
+        definedata.push(tempd);
+
+      //连接井的边框
+       gDetail.append("rect")
+        .attr("id","Rect"+tempd.id)
+        .attr("x", point0x+FlagScalexd(welldata[linkma_name[k]].posx))
+        .attr("y", point0y+FlagScaleyd(welldata[linkma_name[k]].posy))
+        .attr("width", main_well_width)
+        .attr("height", main_well_height)
+        .attr("stroke", "black")
+        .attr("stroke-width", 0.2)
+        .attr("fill", "none");
+
+      //连接井的分层
+    	for(var j=0;j<welldata[linkma_name[k]].Data.length;j++)
+    	{
+      		gDetail.append("rect")
+            .attr("class", "rect"+welldata[linkma_name[k]].Data[j].Flag)
+            .attr("id","rect"+tempd.id+"of"+j)
+        		.attr("x", point0x+FlagScalexd(welldata[linkma_name[k]].posx))
+        		.attr("y", point0y+FlagScaleyd(welldata[linkma_name[k]].posy)+FlagScale(welldata[linkma_name[k]].Data[j].Top_depth))
+        		.attr("width", main_well_width)
+        		.attr("height", FlagScale(welldata[linkma_name[k]].Data[j].Bot_depth)-FlagScale(welldata[linkma_name[k]].Data[j].Top_depth))
+        		.attr("stroke","black")
+        		.attr("stroke-width",0.5)
+        		.attr("fill",color(FlagGroup.indexOf(welldata[linkma_name[k]].Data[j].Flag) % 20 ))
+            .on("click",highlight);
+    	}
+  	}
+
+    var point_mid = point0x + main_well_width/2;
+
+    //绘制右边的部分
+    for (var i = lift_right_div-1; i >= 0; i--) {
+      var num = linkma_name.length;
+      for(var j = 0; j < welldata[linkma_name[i]].Data.length; j++)
+      	for(var k = 0; k < welldata[linkma_name[(i+1)%num]].Data.length; k++)
+          if(welldata[linkma_name[i]].Data[j].Flag == welldata[linkma_name[(i+1)%num]].Data[k].Flag) {
+            var points = [[point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Top_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[(i+1)%num]].posx),point0y+FlagScaleyd(welldata[linkma_name[(i+1)%num]].posy)+FlagScale(welldata[linkma_name[(i+1)%num]].Data[k].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[(i+1)%num]].posx),point0y+FlagScaleyd(welldata[linkma_name[(i+1)%num]].posy)+FlagScale(welldata[linkma_name[(i+1)%num]].Data[k].Top_depth)]];
+
+            var lineGraph = gDetail.append("path")
+                  .attr("class", "path"+welldata[linkma_name[i]].Data[j].Flag)
+                  .attr("id", "line"+linkma_name[i]+"of"+j+"to"+linkma_name[(i+1)%num]+"of"+k)
+                  .attr("d", surface(points))
+                  .attr("stroke", color(FlagGroup.indexOf(welldata[linkma_name[i]].Data[j].Flag) % 20))
+                  .attr("stroke-width", 0)
+                  .attr("fill", color(FlagGroup.indexOf(welldata[linkma_name[i]].Data[j].Flag) % 20));
+            break;
+          }
+
+      for(var j = 0; j < welldata[linkma_name[i]].Data.length; j++)
+      	for(var k = 0; k < obj.Data.length; k++)
+          if(welldata[linkma_name[i]].Data[j].Flag == obj.Data[k].Flag) {
+            var points = [[point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Top_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[obj.indexn].posx),point0y+FlagScaleyd(welldata[obj.indexn].posy)+FlagScale(welldata[obj.indexn].Data[k].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[obj.indexn].posx),point0y+FlagScaleyd(welldata[obj.indexn].posy)+FlagScale(welldata[obj.indexn].Data[k].Top_depth)]];
+
+            var lineGraph = gDetail.append("path")
+                  .attr("class", "path"+welldata[obj.indexn].Data[k].Flag)
+                  .attr("id", "line"+linkma_name[i]+"of"+j+"to"+obj.indexn+"of"+k)
+                  .attr("d", surface(points))
+                  .attr("stroke", color(FlagGroup.indexOf(welldata[obj.indexn].Data[k].Flag) % 20))
+                  .attr("stroke-width", 0)
+                  .attr("fill", color(FlagGroup.indexOf(welldata[obj.indexn].Data[k].Flag) % 20));
+            break;
+          }
+
+    }
+
+    //绘制在左边部分
+    for (var i = lift_right_div; i < linkma_name.length; i++) {
+      var num = linkma_name.length;
+      for(var j = 0; j < welldata[linkma_name[i]].Data.length; j++)
+      	for(var k = 0; k < obj.Data.length; k++)
+          if(welldata[linkma_name[i]].Data[j].Flag == obj.Data[k].Flag) {
+            var points = [[point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Top_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[obj.indexn].posx),point0y+FlagScaleyd(welldata[obj.indexn].posy)+FlagScale(welldata[obj.indexn].Data[k].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[obj.indexn].posx),point0y+FlagScaleyd(welldata[obj.indexn].posy)+FlagScale(welldata[obj.indexn].Data[k].Top_depth)]];
+
+            var lineGraph = gDetail.append("path")
+                  .attr("class", "path"+welldata[obj.indexn].Data[k].Flag)
+                  .attr("id", "line"+linkma_name[i]+"of"+j+"to"+obj.indexn+"of"+k)
+                  .attr("d", surface(points))
+                  .attr("stroke", color(FlagGroup.indexOf(welldata[obj.indexn].Data[k].Flag) % 20))
+                  .attr("stroke-width", 0)
+                  .attr("fill", color(FlagGroup.indexOf(welldata[obj.indexn].Data[k].Flag) % 20));
+            break;
+          }
+
+      for(var j = 0; j < welldata[linkma_name[i]].Data.length; j++)
+        for(var k = 0; k < welldata[linkma_name[(i+1)%num]].Data.length; k++)
+          if(welldata[linkma_name[i]].Data[j].Flag == welldata[linkma_name[(i+1)%num]].Data[k].Flag) {
+            var points = [[point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Top_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[i]].posx),point0y+FlagScaleyd(welldata[linkma_name[i]].posy)+FlagScale(welldata[linkma_name[i]].Data[j].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[(i+1)%num]].posx),point0y+FlagScaleyd(welldata[linkma_name[(i+1)%num]].posy)+FlagScale(welldata[linkma_name[(i+1)%num]].Data[k].Bot_depth)],
+                          [point_mid+FlagScalexd(welldata[linkma_name[(i+1)%num]].posx),point0y+FlagScaleyd(welldata[linkma_name[(i+1)%num]].posy)+FlagScale(welldata[linkma_name[(i+1)%num]].Data[k].Top_depth)]];
+
+            var lineGraph = gDetail.append("path")
+                  .attr("class", "path"+welldata[linkma_name[i]].Data[j].Flag)
+                  .attr("id", "line"+linkma_name[i]+"of"+j+"to"+linkma_name[(i+1)%num]+"of"+k)
+                  .attr("d", surface(points))
+                  .attr("stroke", color(FlagGroup.indexOf(welldata[linkma_name[i]].Data[j].Flag) % 20))
+                  .attr("stroke-width", 0)
+                  .attr("fill", color(FlagGroup.indexOf(welldata[linkma_name[i]].Data[j].Flag) % 20));
+            break;
+          }
+    }
+
+
+
+    gDetail.selectAll(".drag")
+        .data(definedata)
+        .enter()
+        .append("circle")
+        .attr("class","drag")
+        .attr("fill","red")
+        .attr("r",4)
+        .attr("cx",function(d){ return d.x;})
+        .attr("cy",function(d){ return d.y;});
+        
+    gDetail.selectAll(".wname")
+        .data(definedata)
+        .enter()
+        .append("text")
+        .attr("class","wname")
+        .attr("id",function(d){ return "Wname"+d.id;})
+        .attr("x",function(d){ return d.x;})  
+        .attr("y",function(d){ return d.y;})  
+        .attr("dy","-0.35em")
+        .attr("text-anchor", "end")
+        .text(function(d){ return d.wellname;});
+
+    //拖拽功能////////////////////////////////////////////////////////////////////
+    gDetail.selectAll(".drag").call(d3.drag().on("drag", dragged));
+
+    function dragged(d) {
+      d3.select(this).attr("cx", d.x=d3.event.x).attr("cy", d.y=d3.event.y); //d.id
+      d3.select("#Rect"+d.id).attr("x", d.x).attr("y", d.y);
+      d3.select("#Wname"+d.id).attr("x", d.x).attr("y", d.y);
+
+      for(var j=0;j<welldata[d.id].Data.length;j++)
+      {
+        d3.select("#rect"+d.id+"of"+j)
+          .attr("x", d.x)
+          .attr("y", d.y+FlagScale(welldata[d.id].Data[j].Top_depth));
+      }
+
+      if(d.id == obj.indexn)//选取点为中心点的情况
+      {
+        for (var i = 0; i < linkma_name.length; i++)
+          for(var j = 0; j < welldata[linkma_name[i]].Data.length; j++)
+            for(var k = 0; k < obj.Data.length; k++)
+            {
+              if(welldata[linkma_name[i]].Data[j].Flag == obj.Data[k].Flag)
+              {
+                var points = [[definedata[i+1].x+main_well_width/2,definedata[i+1].y+FlagScale(welldata[linkma_name[i]].Data[j].Top_depth)],
+                              [definedata[i+1].x+main_well_width/2,definedata[i+1].y+FlagScale(welldata[linkma_name[i]].Data[j].Bot_depth)],
+                              [d.x+main_well_width/2,d.y+FlagScale(welldata[obj.indexn].Data[k].Bot_depth)],
+                              [d.x+main_well_width/2,d.y+FlagScale(welldata[obj.indexn].Data[k].Top_depth)]];
+
+                d3.select("#line"+linkma_name[i]+"of"+j+"to"+obj.indexn+"of"+k)
+                  .attr("d", surface(points));
+
+                break;
+              }
+            }
+      }
+      else//选取点不是中心点的情况
+      {
+        var num_def = definedata.length;
+
+        for (var i = 0; i < linkma_name.length; i++)
+          if(d.id == linkma_name[i])
+          {
+            var num = linkma_name.length;
+            //选取点与下一个点的连线改变
+            for(var j = 0; j < welldata[d.id].Data.length; j++)
+              for(var k = 0; k < welldata[linkma_name[(i+1)%num]].Data.length; k++)
+              {
+                if(welldata[d.id].Data[j].Flag == welldata[linkma_name[(i+1)%num]].Data[k].Flag)
+                { 
+                  var points= [[d.x+main_well_width/2,d.y+FlagScale(welldata[d.id].Data[j].Bot_depth)],
+                              [d.x+main_well_width/2,d.y+FlagScale(welldata[d.id].Data[j].Top_depth)],
+                              [definedata[(i+1)%num+1].x+main_well_width/2,definedata[(i+1)%num+1].y+FlagScale(welldata[definedata[(i+1)%num+1].id].Data[k].Top_depth)],
+                              [definedata[(i+1)%num+1].x+main_well_width/2,definedata[(i+1)%num+1].y+FlagScale(welldata[definedata[(i+1)%num+1].id].Data[k].Bot_depth)]]; 
+
+                  d3.select("#line"+d.id+"of"+j+"to"+definedata[(i+1)%num+1].id+"of"+k)
+                    .attr("d", surface(points));
+                  break;
+                }
+              }
+            //选取点与中心点的连线改变
+            for(var j = 0; j < welldata[d.id].Data.length; j++)
+              for(var k = 0; k < welldata[obj.indexn].Data.length; k++)
+              {
+                if(welldata[d.id].Data[j].Flag == welldata[obj.indexn].Data[k].Flag)
+                { 
+                  var points = [[d.x+main_well_width/2,d.y+FlagScale(welldata[d.id].Data[j].Bot_depth)],
+                                [d.x+main_well_width/2,d.y+FlagScale(welldata[d.id].Data[j].Top_depth)],
+                                [definedata[0].x+main_well_width/2,definedata[0].y+FlagScale(welldata[definedata[0].id].Data[k].Top_depth)],
+                                [definedata[0].x+main_well_width/2,definedata[0].y+FlagScale(welldata[definedata[0].id].Data[k].Bot_depth)]];
+
+                  d3.select("#line"+d.id+"of"+j+"to"+obj.indexn+"of"+k)
+                    .attr("d", surface(points));
+                  break;
+                }
+              }
+            //选取点与前一点的连线改变
+            for(var j = 0; j < welldata[d.id].Data.length; j++)
+              for(var k = 0; k < welldata[linkma_name[(i-1+num)%num]].Data.length; k++)
+              {
+                if(welldata[d.id].Data[j].Flag == welldata[linkma_name[(i-1+num)%num]].Data[k].Flag)
+                { 
+                  if(i == 0) i_use = definedata.length - 1;
+                  else i_use = i;
+
+                  var points = [[definedata[i_use].x+main_well_width/2,definedata[i_use].y+FlagScale(welldata[linkma_name[(i-1+num)%num]].Data[k].Top_depth)],
+                                [definedata[i_use].x+main_well_width/2,definedata[i_use].y+FlagScale(welldata[linkma_name[(i-1+num)%num]].Data[k].Bot_depth)],
+                                [d.x+main_well_width/2,d.y+FlagScale(welldata[d.id].Data[j].Bot_depth)],
+                                [d.x+main_well_width/2,d.y+FlagScale(welldata[d.id].Data[j].Top_depth)]];
+
+                  d3.select("#line"+definedata[i_use].id+"of"+k+"to"+d.id+"of"+j)
+                    .attr("d", surface(points));
+                  break;
+                }
+              }
+            break;
+          }
+      }
+    }
+  }
+
+
+////////////////////////////循环读取测井曲线并绘制///////////////////////////////////////
+ //绘制人工标记层匹配的连线/////////////////////
+  var xieh=[];//统计层匹配时的最大高度差
+  for(var i=0;i<FlagGroup.length;i++)
+  {
+
+      for(var j=1;j<well_num;j++)
+      {
+        var tempm=welldata[j-1].Flag_group.indexOf(FlagGroup[i]);
+        var tempn=welldata[j].Flag_group.indexOf(FlagGroup[i]);
+
+        if(tempm>=0 && tempn>=0)
+        {
+
+          xieh.push(Math.abs(welldata[j-1].Data[tempm].Top_depth-welldata[j].Data[tempn].Top_depth));
+
+
+          xieh.push(Math.abs(welldata[j-1].Data[tempm].Bot_depth-welldata[j].Data[tempn].Bot_depth));
+              
+        }
+      }
+
+  }
+
+  var xiehmax=d3.max(xieh);
+  //同步读取数据
+  var wtdatas=[]; //井的文本数据集合
+  var wbdatas=[];  //井的分层数据集合，测井曲线统计之后的信息
+
+  function readtext(dataurl){
+      $.ajax({
+          type:"GET",
+          url:dataurl,
+          async:false,
+          dataType:"text",
+          success:function(data){
+              wtdatas.push(data);
+          }
+      })
+  }
+
+
+  var attrnames=["COND","SP","AC","ML1","ML2"];
+  var attrno=2;
+  var attrn=attrnames[attrno];
+  var gminv=0.0,gmaxv=10.0;
+
+  function showcurves(wellnum){
+
+    for(var n=0;n<wellnum;n++)
+    {
+        var filename="well_curves/"+welldata[n].ID+".las";
+
+        readtext(filename);
+
+        var totalstring=wtdatas[n];
+        var strings=totalstring.split("\n");
+
+        var curved=[];//存储1000-1500米之间的数据
+        var cdkey=[];//存储属性
+        var istest=false;
+//处理文本数据
+        for(var i=0;i<strings.length;i++)
+        {
+          var temps=[];
+          var substrings=strings[i].split(/\t|\s/g);
+
+          for(var j=0;j<substrings.length;j++)
+          {
+            if(substrings[j].replace(/(^s*)|(s*$)/g, "").length !=0 ) 
+            {
+               temps.push(substrings[j]); 
+            }
+
+          }
+
+          if(istest)
+          {
+            var testv=parseFloat(temps[0]);
+
+            if(testv>= 600.0 && testv<=1500.0)
+            {
+
+              var tempcurved={};
+
+              for(var k=0;k<temps.length;k++)
+              {
+                tempcurved[ cdkey[k] ]= parseFloat(temps[k]);
+              }
+
+              curved.push(tempcurved);
+            }
+
+          }
+          else
+          {
+            if(temps[0]=="~A")
+            {
+              istest=true;
+
+              for(var k=1;k<temps.length;k++)
+              {
+                cdkey.push(temps[k]);
+              }
+
+           }
+
+          }
+        }
+        ////////////绘制显示不同属性的曲线///////////////////////////////////////////////////////////////////////////////////
+        ///////////////先绘制测试参数指定的属性//////////////////////////////////////////////////////////////////////////////
+
+        var fcd=curved.filter(function(cd) {return (cd.DEPT >= TopH)&&(cd.DEPT <= BotH)&&(cd[attrn]> -1000.0)&&(cd[attrn]<1000.0) });
+
+        //处理异常数据//////////////////////////////////////////////////
+        if(attrno==2)
+        {
+          var fcdtemp=curved.filter(function(cd) {return (cd.DEPT>=TopH)&&(cd.DEPT<=BotH)&&(cd[attrn]>50.0)&&(cd[attrn]<1000.0) });
+          var fcdmean=d3.mean(fcdtemp, function(cd){ return cd[attrn]});
+
+          for(var i=0;i<fcd.length;i++)
+          {
+            if(fcd[i][attrn]< 50.0)fcd[i][attrn]=fcdmean;
+          }
+        }
+
+        //保存原始曲线数据，用于绘制细节对比
+        var curvedata=fcd;
+
+        var mind=d3.min(fcd, function(d){ return d[attrn]});
+        var maxd=d3.max(fcd, function(d){ return d[attrn]});
+
+        //归一化//////////////////////////////////////////////
+        for(var i=0;i<fcd.length;i++)
+        {
+          fcd[i][attrn]=gmaxv*(fcd[i][attrn]-mind)/(maxd-mind);
+
+          fcd[i].lmax=0;
+          fcd[i].lmin=0;
+        }
+
+        //标记极大值、极小值
+        for(var i=1;i<fcd.length-1;i++)
+        {
+          if(fcd[i][attrn]-fcd[i-1][attrn]>0.0 && fcd[i+1][attrn]-fcd[i][attrn]<0.0)fcd[i].lmax=1;
+          if(fcd[i][attrn]-fcd[i-1][attrn]<0.0 && fcd[i+1][attrn]-fcd[i][attrn]>0.0)fcd[i].lmin=1;
+        }
+
+        //console.log(maxd);
+        var XScale = d3.scaleLinear().domain([gminv, gmaxv]).range([0, well_width]);
+
+        var sx=startx+(well_width+interval)*n;
+
+        var line = d3.line()
+                  .x(function(d) { return sx+XScale(d[attrn]); })
+                  .y(function(d) { return starty+FlagScale(d.DEPT); });
+
+        //******//////////1.测井曲线数据预处理///////////////////////////////////////////////////////////////////**********
+        /////////////1.1异常值校正、缺失值插值/////////////////////////////////////////////////////////////////////////////
+
+        /////////////1.2.中值滤波////////////////////////////////////////////////////////////////////////////////////////
+        var midvf_N=10;  //中值滤波前后各取值的数量
+
+        for(var ti=0;ti<fcd.length;ti++)
+        {
+          var tempN=midvf_N;
+          if(ti<midvf_N)tempN=ti;
+          if(ti> fcd.length-1-midvf_N)tempN=fcd.length-ti-1;
+
+          var midvs=[];//存放前后的取值
+          for(var tj=ti-tempN; tj< ti+tempN+1; tj++)
+          {
+            midvs.push(fcd[tj][attrn]);
+          }
+
+          //取中值//////////////////////////
+          fcd[ti]["MV_"+attrn]=d3.median(midvs);
+
+        }
+
+        //绘制中值曲线//////////////////////
+        var linem = d3.line()
+                  .x(function(d) { return sx+XScale(d["MV_"+attrn]); })
+                  .y(function(d) { return starty+FlagScale(d.DEPT); });
+
+
+        ////////////////1.3.根据中值计算活度函数及绘制///////////////////////////////////////////////////////////////////////////////
+        var act_N=15;  //活度计算前后各取值的数量
+
+        fcd[0]["AV_"+attrn]=0.0;
+        fcd[ fcd.length-1 ]["AV_"+attrn]=0.0;
+
+        var isiter=false;
+        var Rd=0.0,Td=0.0;
+
+        for(var ti=1;ti<fcd.length-1;ti++)
+        {
+          var tempN=act_N;
+
+          if(ti < act_N)
+          {
+            tempN=ti;
+            var actvs=[];
+
+            for(var tj=ti-tempN; tj< ti+tempN+1; tj++)
+            {
+             actvs.push(fcd[tj]["MV_"+attrn]);
+            }
+
+            fcd[ti]["AV_"+attrn]=d3.variance(actvs);
+
+          } else if(ti>=act_N && ti<=fcd.length-1-act_N)
+          {
+            if(isiter)
+            {
+            Rd=Rd-(fcd[ti-tempN-1]["MV_"+attrn]*fcd[ti-tempN-1]["MV_"+attrn])+(fcd[ti+tempN]["MV_"+attrn]*fcd[ti+tempN]["MV_"+attrn]);
+              Td=Td-fcd[ti-tempN-1]["MV_"+attrn] + fcd[ti+tempN]["MV_"+attrn];
+
+              fcd[ti]["AV_"+attrn]=Rd-Td*Td/(2*tempN+1);
+
+            }else
+            {
+              isiter=true;
+
+              for(var tj=ti-tempN; tj< ti+tempN+1; tj++)
+              {
+                Rd+= (fcd[tj]["MV_"+attrn] * fcd[tj]["MV_"+attrn]);
+                Td+= fcd[tj]["MV_"+attrn];
+              }
+
+              fcd[ti]["AV_"+attrn]=Rd-Td*Td/(2*tempN+1);
+            }
+
+          }else
+          {
+            tempN=fcd.length-ti-1;
+            var actvs=[];
+
+            for(var tj=ti-tempN; tj< ti+tempN+1; tj++)
+            {
+             actvs.push(fcd[tj]["MV_"+attrn]);
+            }
+
+            fcd[ti]["AV_"+attrn]=d3.variance(actvs);
+          }
+
+        }
+
+        //统计活度值范围
+        var mina=d3.min(fcd, function(d){ return d["AV_"+attrn]});
+        var maxa=d3.max(fcd, function(d){ return d["AV_"+attrn]});
+
+        var AXScale = d3.scaleLinear().domain([mina, maxa]).range([0, well_width]);
+
+        //绘制活度函数曲线//////////////////////
+        var linea = d3.line()
+                    .x(function(d) { return sx+AXScale(d["AV_"+attrn]); })
+                    .y(function(d) { return starty+FlagScale(d.DEPT); });
+
+
+        ////////////////1.4.阈值检验活度极值///////////////////////////////////////////////////////////////////////////////
+        var  av_threshold=maxa*0.05;
+        /////计算活度值差分/////////////////
+        var diffs=[];
+        for(var ti=1;ti<fcd.length;ti++)diffs.push(fcd[ti]["AV_"+attrn] - fcd[ti-1]["AV_"+attrn]);
+
+        var borders=[];  //存放符合阈值的活度深度索引
+
+        for(var ti=0;ti<diffs.length-1;ti++)
+        {
+          if(diffs[ti]>0.0 && diffs[ti+1]<0.0 && fcd[ti+1]["AV_"+attrn]>=av_threshold )borders.push(ti+1);
+        }  
+
+        //borders.push(0);
+
+        ////////////////1.5.层均值检验进行薄层合并///////////////////////////////////////////////////////////////////////////////////
+
+        ////////////////1.6.井层数据设计///////////////////////////////////////////////////////////////////////////////////////////
+        var wbdata={};
+        wbdata.id=n;
+        wbdata.bdata=[];
+        wbdata.cdata=curvedata;
+
+        for(var k=1;k<borders.length;k++)
+        {
+          var indext=borders[k-1], indexb=borders[k];
+
+          var tempbd={};
+
+          tempbd.th=fcd[indext].DEPT;   //层顶深度
+          tempbd.bh=fcd[indexb].DEPT;   //层底深度
+          tempbd.dh=tempbd.bh-tempbd.th;//层的厚度
+
+          var bvs=[],rmvs=[];
+
+          for(var tm=indext;tm<=indexb;tm++)
+          {
+            bvs.push(fcd[tm][attrn]);
+            rmvs.push(fcd[tm][attrn]*(tm-indext+1));
+          }
+
+          tempbd.fv=d3.variance(bvs);   //方差
+          tempbd.mv=d3.mean(bvs);   //均值
+          tempbd.rm=d3.sum(rmvs)/((indexb-indext+1)*d3.sum(bvs)); //相对重心
+
+          tempbd.maxv=d3.max(bvs);  //最大值
+          tempbd.minv=d3.min(bvs);  //最小值
+
+          //新添加属性:最大最小值之差，上下陡度，极大极小值及相对位置/////////////////////////////
+          tempbd.dtv=tempbd.maxv-tempbd.minv; //最大值最小值之差
+
+          tempbd.topk=fcd[indext+1][attrn]-fcd[indext-1][attrn];//上陡度，定义为边界处的斜率
+          tempbd.botk=fcd[indexb+1][attrn]-fcd[indexb-1][attrn];//下陡度
+
+          var lmaxvs=[],lminvs=[];
+          for(var tm=indext;tm<=indexb;tm++)
+          {
+            if(fcd[tm].lmax==1)lmaxvs.push([fcd[tm][attrn],tm]);
+            if(fcd[tm].lmin==1)lminvs.push([fcd[tm][attrn],tm]);
+          }
+
+          tempbd.lmaxv=-1,tempbd.lminv=-1,tempbd.lmaxp=-1,tempbd.lminp=-1;
+
+          if(lmaxvs.length>0)
+          {
+            //排序，找出最大的极大值
+            function compareLmaxv(a, b) {
+                return b[0]-a[0];
+            }
+
+            lmaxvs.sort(compareLmaxv);
+
+            tempbd.lmaxv=lmaxvs[0][0];
+            tempbd.lmaxp=(lmaxvs[0][1]-indext)/(indexb-indext);
+          }
+
+          if(lminvs.length>0)
+          {
+            //排序，找出最小的极小值
+            function compareLminv(a, b) {
+                return a[0]-b[0];
+            }
+
+            lminvs.sort(compareLminv);
+
+            tempbd.lminv=lminvs[0][0];
+            tempbd.lminp=(lminvs[0][1]-indext)/(indexb-indext);
+          }
+
+          wbdata.bdata.push(tempbd); 
+        } 
+
+        wbdatas.push(wbdata);  
+
+   }
+
+  }
+
+  //********读取数据显示曲线及设计数据格式*****************************************************
+  //******//////////中间模型进行地层匹配///////////////////////////////////////////////////////
+  function layermatch(wbdataA, wbdataB){
+
+    var m=wbdataA.bdata.length,n=wbdataB.bdata.length;
+
+    //归一化两口井的所有层数据的属性值，层厚、均值、方差、相对重心等//////////
+    var attrs=["dh","fv","mv","rm","maxv","minv","dtv","topk","botk"];
+    for(var k=0;k<attrs.length;k++)
+    {
+      var tempatts=[];
+
+      for(var i=0;i<m;i++)tempatts.push(wbdataA.bdata[i][attrs[k]]);
+      for(var i=0;i<n;i++)tempatts.push(wbdataB.bdata[i][attrs[k]]);
+
+      var maxattr=d3.max(tempatts);
+      var minattr=d3.min(tempatts);
+
+      var newattr="g"+attrs[k];
+
+      for(var i=0;i<m;i++)wbdataA.bdata[i][newattr]=(wbdataA.bdata[i][attrs[k]]-minattr)/(maxattr-minattr);
+      for(var i=0;i<n;i++)wbdataB.bdata[i][newattr]=(wbdataB.bdata[i][attrs[k]]-minattr)/(maxattr-minattr);
+    }
+    ///////////////////////////////////////////////////////////////
+    var disvs=[];
+    var disvsm=[];
+
+    for(var i=0;i<m;i++)
+    {
+      var tdm=[];
+
+      for(var j=0;j<n;j++)
+      {
+        var tdis=disbdata(wbdataA.bdata[i],wbdataB.bdata[j]);
+        disvs.push(tdis);
+        tdm.push(tdis);
+      }  
+      
+      disvsm.push(tdm);
+    }
+
+    var vadis=Math.sqrt(d3.variance(disvs)*m*n/(m*n-2));
+  
+    //定义距离矩阵和标记矩阵//////////////////////////////////////////////i代表行，j代表列
+    var dism=[];
+    var flag=[];
+    for(var i=0;i<=m;i++)
+    {
+      var tempdism=[];
+      var tempflag=[];
+
+      for(var j=0;j<=n;j++)
+      {
+        tempdism.push(0.0);
+        tempflag.push(-1);
+      }
+
+      dism.push(tempdism);
+      flag.push(tempflag);
+    }
+
+    //首先初始化距离矩阵两边//////////////////
+    dism[0][0]=0.0;
+    for(var i=1;i<=m;i++)dism[i][0]=0.5*vadis*i;
+    for(var j=1;j<=n;j++)dism[0][j]=0.5*vadis*j;
+
+    //动态规划算法
+    var smallest=1.0/Math.pow(10,10);
+    for(var i=1;i<=m;i++)
+    {
+        for(var j=1;j<=n;j++)
+        {
+          var dirvs=[];//存放所有方向的值
+
+          var chui={}, shui={};
+          chui.id=1;
+          chui.value=dism[i-1][j]+0.5*vadis;
+          shui.id=3;
+          shui.value=dism[i][j-1]+0.5*vadis;
+
+          dirvs.push(chui);
+          dirvs.push(shui);
+
+          var tempdis=disbdata(wbdataA.bdata[i-1],wbdataB.bdata[j-1]);
+          //具备相似性的条件（相似值在一个标准差内 且  高度差异在合理范围内）
+          if(tempdis<vadis && Math.abs(wbdataA.bdata[i-1].th-wbdataB.bdata[j-1].th)<=xiehmax)  
+          {
+            var dui={};
+            dui.id=2;
+            dui.value=dism[i-1][j-1]+tempdis;
+            dirvs.push(dui);
+          }
+
+          //排序，找出最小值
+          function compareDV(a, b) { return a.value - b.value; }
+
+          dirvs.sort(compareDV);
+          
+          //如果存在两条路径
+          if(Math.abs(dirvs[0].value-dirvs[1].value) < smallest){ flag[i][j]=4; }
+          else {flag[i][j]=dirvs[0].id;}
+
+          dism[i][j]=dirvs[0].value;
+
+        }
+    }
+
+    //寻找翘曲路径///////////////////////////////////
+    var layerpairs=[]; //定义匹配的层段
+
+    var i=m,j=n;
+    while(i>0 && j>0)
+    {
+        if(flag[i][j]==2)   ///如果是斜向下标记
+        {
+          var layerpair=[];
+          layerpair.push(i-1);
+          layerpair.push(j-1);
+
+          layerpairs.push(layerpair);
+
+          i--;
+          j--;
+        }
+        else if(flag[i][j]==1)  ///如果是垂直标记
+          i--;
+        else if(flag[i][j]==3)  ///如果是水平标记
+          j--;
+        else  //如果路径模糊，4，查找其余三个向前的值
+        {
+          var dirvs=[];//存放所有方向的值
+
+          var chui={}, shui={}, dui={};
+          chui.id=1;
+          chui.value=dism[i-1][j];
+          shui.id=3;
+          shui.value=dism[i][j-1];
+          dui.id=2;
+          dui.value=dism[i-1][j-1];
+
+          dirvs.push(chui);
+          dirvs.push(shui);
+          dirvs.push(dui);
+
+          //排序，找出最小值
+          function compareDV(a, b) { return a.value - b.value; }
+
+          dirvs.sort(compareDV);
+
+          if(dirvs[0].id==2) {
+
+            var layerpair=[];
+            layerpair.push(i-1);
+            layerpair.push(j-1);
+
+            //layerpairs.push(layerpair);
+            i--;
+            j--;
+
+          } else if(dirvs[0].id==1) i--;
+          else j--;
+        }
+    }
+
+    //定义层数据的距离///////////////////////////////
+    function disbdata(bdatap,bdataq)
+    {
+      //使用归一化后两口井的所有层数据的属性值，层厚、均值、方差、相对重心等//////////
+      var attrs = ["dh","fv","mv","rm","maxv","minv","dtv","topk","botk"];
+      var wattrs = [0.2, 0.3, 0.3, 0.1, 0.05, 0.05, 0.2, 0.1, 0.1];
+
+      var disv=0.0;
+
+      for(var k=0;k<attrs.length;k++)
+        disv+= (wattrs[k]*Math.abs(bdatap[attrs[k]]-bdataq[attrs[k]]));
+
+      //添加极大值极小值的影响
+      var wmaxv=0.1,wmaxp=0.1,wminv=0.1,wminp=0.1;
+      if(bdatap.lmaxv>=0.0 && bdataq.lmaxv>=0.0)
+      {
+        disv+= wmaxv*Math.abs(bdatap.lmaxv-bdataq.lmaxv)/(gmaxv-gminv);
+        disv+= wmaxp*Math.abs(bdatap.lmaxp-bdataq.lmaxp);
+      }
+
+      if(bdatap.lminv>=0.0 && bdataq.lminv>=0.0)
+      {
+        disv+= wminv*Math.abs(bdatap.lminv-bdataq.lminv)/(gmaxv-gminv);
+        disv+= wminp*Math.abs(bdatap.lminp-bdataq.lminp);
+      }
+      return disv;
+    }
+
+    //归一化距离矩阵////////////////////////////////////////
+    var dismax=d3.max(disvs), dismin=d3.min(disvs);
+    for(var i=0;i<m;i++)
+      for(var j=0;j<n;j++)
+        disvsm[i][j]=(disvsm[i][j]-dismin)/(dismax-dismin);
+
+    for(var i=0;i<=m;i++)
+      for(var j=0;j<=n;j++)
+        dism[i][j]=dism[i][j]/dism[m][n];
+
+
+    //返回匹配的数据/////////////////////////////////////////
+    var lmdata={};
+    lmdata.ida=wbdataA.id;
+    lmdata.idb=wbdataB.id;
+    lmdata.rn=m;
+    lmdata.cn=n;
+    lmdata.layerpairs=layerpairs;
+    lmdata.dism=dism;
+    lmdata.flag=flag;
+    lmdata.disvsm=disvsm;
+
+    return  lmdata;
+
+  }
+
+
+  //主体函数执行/////////////////////////////////////////////////////////////////////////////////
+  //显示曲线和预处理的结果
+  showcurves(well_num);
+
+  var lmdatas=[];  //井的连续匹配数据数组
+  //循环匹配和显示匹配结果
+  for(var k=0;k<well_num-1;k++)
+  {
+      var lmdata=layermatch(wbdatas[k], wbdatas[k+1]);
+      lmdatas.push(lmdata);
+      var tempmatch=lmdata.layerpairs;
+
+      for(var ck=0;ck<tempmatch.length;ck++)
+      {
+        //绘制匹配的面
+        var points=[
+        [startx+well_width+(well_width+interval)*k,starty+FlagScale(wbdatas[k].bdata[tempmatch[ck][0]].th)],
+        [startx+(well_width+interval)*(k+1),starty+FlagScale(wbdatas[k+1].bdata[tempmatch[ck][1]].th)],
+        [startx+(well_width+interval)*(k+1),starty+FlagScale(wbdatas[k+1].bdata[tempmatch[ck][1]].bh)],
+        [startx+well_width+(well_width+interval)*k,starty+FlagScale(wbdatas[k].bdata[ tempmatch[ck][0]].bh)] ];
+
+      }
+  }
+  
+  showDM(lmdatas[2],2,[0,0],-1);
+  //展示动态规划矩阵 lmk
+  function showDM(lmdata,lmk,index,u_or_d) {
+    //标记跟新的连线
+    //index=[0,0];
+    //u_or_d=-1;//添加或者删除
+    //show_two(lmdata,lmk,index,u_or_d);
+    show_two(lmdata,lmk,index,u_or_d);
+    var starts=100;
+
+    var DMScale = d3.scaleLinear().domain([0, BotH-TopH]).range([0, svgmw-starts*1.3]);
+
+    var tempsx=starts,tempsy=starts;
+
+    //设置颜色差值
+    var linearScale=d3.scaleLinear()
+        .domain([0,0.5,1])
+        .range(['red', 'yellow', '#B0E0E6']);
+          
+    for(var i=0;i<lmdata.rn;i++)
+    {
+      tempsx=starts;
+
+      for(var j=0;j<lmdata.cn;j++)
+      {
+        var dtemp={};
+        dtemp.wida=lmdata.ida;
+        dtemp.widb=lmdata.idb;
+        dtemp.lida=i;
+        dtemp.lidb=j;
+
+        svgm.append("rect")
+            .attr("class", "Grid")
+            .attr("id", "grid"+i+"to"+j)
+            .attr("x", tempsx)
+            .attr("y", tempsy)
+            .attr("width", DMScale(wbdatas[lmdata.idb].bdata[j].dh))
+            .attr("height", DMScale(wbdatas[lmdata.ida].bdata[i].dh))
+            .attr("stroke","none")
+            .attr("fill",linearScale(1-lmdata.disvsm[i][j]))
+            .datum(dtemp);
+
+        tempsx+=DMScale(wbdatas[lmdata.idb].bdata[j].dh);
+      }
+      tempsy+= DMScale(wbdatas[lmdata.ida].bdata[i].dh);
+    }  
+
+  //高亮显示匹配成功的元素和翘曲路径
+  var warpingpath=[];
+  //上面曲线点的坐标
+  var range_up=[];
+  //下面曲线点的坐标
+  var range_down=[];
+
+  for(var k=0;k<lmdata.layerpairs.length;k++)
+  {
+    svgm.select("#"+"grid"+lmdata.layerpairs[k][0]+"to"+lmdata.layerpairs[k][1]).attr("stroke","#0000FF");//纯蓝
+
+    var temppath=[];
+    var tempup=[];
+    var tempdown=[];
+    var xtemp=svgm.select("#"+"grid"+lmdata.layerpairs[k][0]+"to"+lmdata.layerpairs[k][1]).attr("x"),
+        wtemp=svgm.select("#"+"grid"+lmdata.layerpairs[k][0]+"to"+lmdata.layerpairs[k][1]).attr("width"),
+        ytemp=svgm.select("#"+"grid"+lmdata.layerpairs[k][0]+"to"+lmdata.layerpairs[k][1]).attr("y"),
+        htemp=svgm.select("#"+"grid"+lmdata.layerpairs[k][0]+"to"+lmdata.layerpairs[k][1]).attr("height");
+
+    temppath.push( parseFloat(xtemp) + 0.5*parseFloat(wtemp),parseFloat(ytemp) + 0.5*parseFloat(htemp) );
+
+    warpingpath.push(temppath);
+    /////曲线上方折线 
+    if(k==0)
+    {
+      tempup.push(parseFloat(xtemp),parseFloat(ytemp));     
+      range_up.push(tempup);      
+    } else {
+      var tempup_1=[];
+      var tempup_2=[];
+      tempup.push(range_up[range_up.length-1][0],parseFloat(ytemp)+parseFloat(htemp));
+      tempup_1.push(parseFloat(xtemp)+parseFloat(wtemp),parseFloat(ytemp)+parseFloat(htemp));
+      tempup_2.push(parseFloat(xtemp),parseFloat(ytemp));
+      range_up.push(tempup);
+      range_up.push(tempup_1);
+      range_up.push(tempup_2);
+    }
+
+    ////曲线下方折线
+    if(k==0)
+    {
+      tempdown.push(parseFloat(xtemp),parseFloat(ytemp));     
+      range_down.push(tempdown);
+    } else {
+      var tempdown_1=[];
+      var tempdown_2=[];
+      tempdown.push(parseFloat(xtemp)+parseFloat(wtemp),range_down[range_down.length-1][1]);
+      tempdown_1.push(parseFloat(xtemp)+parseFloat(wtemp),parseFloat(ytemp)+parseFloat(htemp));
+      tempdown_2.push(parseFloat(xtemp),parseFloat(ytemp));
+      range_down.push(tempdown);
+      range_down.push(tempdown_1);
+      range_down.push(tempdown_2);
+    }
+  }
+
+  var wpline = d3.line()
+         .x(function(d) { return d[0]; })
+         .y(function(d) { return d[1]; })
+         .curve(d3.curveMonotoneX);
+  //曲线
+  svgm.append("path")
+      .attr("class", "Grid")
+      .attr("d", wpline(warpingpath))
+      .attr("stroke", "#0000CD")//适中的蓝色
+      .attr("stroke-width", 3.5)
+      .attr("stroke-opacity", 0.5)
+      .attr("fill", "none");
+
+  //曲线上方折线  
+  //console.log(range_up);
+  for(var i=0;i<range_up.length;i+3) {
+    svgm.append("path")
+      .attr("class","Grid")
+        .attr("d", wpline(range_up.splice(i,3)))
+        .attr("stroke", "#000080")// 海军蓝
+        .attr("stroke-width", 0.5)
+        .attr("stroke-opacity", 2)
+        .attr("fill", "none");
+  }
+  //曲线下方折线  
+  for(var i=0;i<range_down.length;i+3) {
+    svgm.append("path")
+      .attr("class","Grid")
+        .attr("d", wpline(range_down.splice(i,3)))
+        .attr("stroke", "#000080")
+        .attr("stroke-width", 0.5)
+        .attr("stroke-opacity", 2)
+        .attr("fill", "none");
+  }
+     
+  //添加颜色差值的方块
+  var defs= svgm.append("defs").attr("class", "Grid");
+  
+  var linearGradient=defs.append("linearGradient")
+            .attr("id","linearColor")
+            .attr("x1","0%")
+            .attr("y1","0%")
+            .attr("x2","100%")
+            .attr("y2","0%");
+
+  var stop1=linearGradient.append("stop")
+              .attr("offset","0%")
+              .style("stop-color","red");
+  
+  var stop2=linearGradient.append("stop")
+              .attr("offset","50%")
+              .style("stop-color","yellow");
+
+  var stop3=linearGradient.append("stop")
+              .attr("offset","100%")
+              .style("stop-color", '#E0FFFF');
+            
+  var colorRect=svgm.append("rect")
+          .attr("x",350)
+          .attr("y",580)
+          .attr("width",200)
+          .attr("height",15)
+          .style("fill","url(#"+linearGradient.attr("id")+")")
+
+  svgm.append("text")
+      .attr("fill","black")
+      .attr("font-size","14px")
+      .attr("x",350)
+      .attr("y",580)
+      .text("1.00");
+
+  svgm.append("text")
+      .attr("class", "Grid")
+      .attr("fill","black")
+      .attr("font-size","14px")
+      .attr("x",520)
+      .attr("y",580)
+      .text("0.00");
+
+  //添加交互///////////////////////////   
+  var click_x=0;var click_y=0;
+  svgm.selectAll(".Grid")
+      .on("click",function(d) { 
+        svgm.select("#grid"+click_y+"to"+click_x).attr("fill",linearScale(1-lmdata.disvsm[click_y][click_x]));
+        d3.select(this).attr("fill","yellow");
+        click_x=d.lidb;
+        click_y=d.lida;
+        showTwoWells(d);
+      }); 
+      
+  //添加按钮的操作
+  d3.select("#add")
+    .on("click",function(d){
+      var k=0;
+      outloop:
+        
+      for(var i=0;i<lmdata.layerpairs.length;i++)
+      {
+        //匹配的格子
+        if(lmdata.layerpairs[i][0]==click_y&&lmdata.layerpairs[i][1]==click_x)
+        {
+          k=1;
+          window.alert("该格子已经在匹配队列");
+          break outloop;
+        }
+        //匹配区域的格子
+        if(i!=lmdata.layerpairs.length-1)
+        {
+          var d1_y=lmdata.layerpairs[i][0];
+          var d1_x=lmdata.layerpairs[i][1];
+          var d2_y=lmdata.layerpairs[i+1][0];
+          var d2_x=lmdata.layerpairs[i+1][1];
+          for(var x=d2_x+1;x<d1_x;x++)
+            for(var y=d2_y+1;y<d1_y;y++)
+              if(click_x==x&&click_y==y) {
+                k=1;
+                window.alert("匹配成功");
+                var temp=[];
+                temp.push(y,x);
+                index=temp;
+                u_or_d=0;             
+                lmdata.layerpairs.splice(i+1,0,temp);
+                svgm.selectAll(".Grid").remove();
+                svgm.selectAll("path").remove();
+                showDM(lmdata,lmk,index,u_or_d);
+                break outloop;
+              }
+        }
+      }
+      if(k==0) window.alert("这里不能操作");
+    });
+
+  //删除按钮的操作
+  d3.select("#delete")
+    .on("click",function(d){
+      var k=0;
+      outloop:
+      for(var i=0;i<lmdata.layerpairs.length;i++)
+      {
+        if(lmdata.layerpairs[i][0]==click_y&&lmdata.layerpairs[i][1]==click_x)
+        {
+          k=1;
+          index=[click_x,click_y];
+          u_or_d=1;
+          window.alert("ok");         
+          lmdata.layerpairs.splice(i,1);
+          //console.log(lmdata);
+          svgm.selectAll(".Grid").remove();
+          svgm.selectAll("path").remove();
+          showDM(lmdata,lmk,index,u_or_d);
+          break outloop;
+        }
+      }
+      if(k==0) window.alert("这里不能操作");
+    });
+
+  //绘制划分格子
+  var begin_x = 1;
+  var begin_y = 1;
+  var block_width = (svgcw-5)/5;
+  var block_height = svgch-5;
+  var name_array = ["COND","SP","AC","ML1","ML2"];
+
+  for(var i = 0; i<name_array.length;i++)
+  {
+    svgc.append("rect")
+        .attr("x", begin_x+block_width*i)
+        .attr("y", begin_y)
+        .attr("width", block_width)
+        .attr("height", block_height)
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
+        .attr("fill", "none");
+
+    svgc.append("text")
+        .attr("x", begin_x+block_width*i+5)
+        .attr("y", begin_y+15)
+        .text(name_array[i]);
+  }
+  
+  //在第三个svg中添加线条
+  function showTwoWells(obj) {
+    attrn_COND="COND";
+    attrn_SP="SP";
+    attrn_AC="AC";
+    attrn_ML1="ML1";
+    attrn_ML2="ML2";
+
+    svgc.selectAll(".gcdetail").remove();
+
+    var gcDetail = svgc.append("g").classed("gcdetail", true);
+
+    var tempaTH=wbdatas[obj.wida].bdata[obj.lida].th,
+        tempaBH=wbdatas[obj.wida].bdata[obj.lida].bh,
+        tempaDH=wbdatas[obj.wida].bdata[obj.lida].dh;
+        
+    var tempbTH=wbdatas[obj.widb].bdata[obj.lidb].th,
+        tempbBH=wbdatas[obj.widb].bdata[obj.lidb].bh,
+        tempbDH=wbdatas[obj.widb].bdata[obj.lidb].dh;
+
+    var tempcda=wbdatas[obj.wida].cdata.filter(function(cd) {return (cd.DEPT >= tempaTH)&&(cd.DEPT <= tempaBH);});
+    var tempcdb=wbdatas[obj.widb].cdata.filter(function(cd) {return (cd.DEPT >= tempbTH)&&(cd.DEPT <= tempbBH);});
+
+    var maxcd_COND=d3.max([d3.max(tempcda, function(d){return d[attrn_COND]}),
+      d3.max(tempcdb, function(d){return d[attrn_COND]})]);
+    var mincd_COND=d3.min([d3.min(tempcda, function(d){return d[attrn_COND]}),
+      d3.min(tempcdb, function(d){return d[attrn_COND]})]);
+
+    var scaleyca_COND=d3.scaleLinear().domain([maxcd_COND, mincd_COND]).range([svgcw/100*5, svgcw/100*10]),
+        scaleycb_COND=d3.scaleLinear().domain([maxcd_COND, mincd_COND]).range([svgcw/100*10, svgcw/100*15]);
+
+    var maxcd_SP=d3.max([d3.max(tempcda, function(d){return d[attrn_SP]}),
+      d3.max(tempcdb, function(d){return d[attrn_SP]})]);
+    var mincd_SP=d3.min([d3.min(tempcda, function(d){return d[attrn_SP]}),
+      d3.min(tempcdb, function(d){return d[attrn_SP]})]);
+    
+    var scaleyca_SP=d3.scaleLinear().domain([maxcd_SP, mincd_SP]).range([svgcw/100*25, svgcw/100*30]),
+        scaleycb_SP=d3.scaleLinear().domain([maxcd_SP, mincd_SP]).range([svgcw/100*30, svgcw/100*35]);
+      
+    var maxcd_AC=d3.max([d3.max(tempcda, function(d){return d[attrn_AC]}),
+      d3.max(tempcdb, function(d){return d[attrn_AC]})]);
+    var mincd_AC=d3.min([d3.min(tempcda, function(d){return d[attrn_AC]}),
+      d3.min(tempcdb, function(d){return d[attrn_AC]})]);
+     
+    var scaleyca_AC=d3.scaleLinear().domain([maxcd_AC, mincd_AC]).range([svgcw/100*45, svgcw/100*50]),
+        scaleycb_AC=d3.scaleLinear().domain([maxcd_AC, mincd_AC]).range([svgcw/100*50, svgcw/100*55]);
+      
+    var maxcd_ML1=d3.max([d3.max(tempcda, function(d){return d[attrn_ML1]}),d3.max(tempcdb, function(d){return d[attrn_ML1]})]);
+    var mincd_ML1=d3.min([d3.min(tempcda, function(d){return d[attrn_ML1]}),d3.min(tempcdb, function(d){return d[attrn_ML1]})]);
+
+    var scaleyca_ML1=d3.scaleLinear().domain([maxcd_ML1, mincd_ML1]).range([svgcw/100*65, svgcw/100*70]),
+        scaleycb_ML1=d3.scaleLinear().domain([maxcd_ML1, mincd_ML1]).range([svgcw/100*70, svgcw/100*75]);
+      
+    var maxcd_ML2=d3.max([d3.max(tempcda, function(d){return d[attrn_ML2]}),
+      d3.max(tempcdb, function(d){return d[attrn_ML2]})]);
+    var mincd_ML2=d3.min([d3.min(tempcda, function(d){return d[attrn_ML2]}),
+      d3.min(tempcdb, function(d){return d[attrn_ML2]})]);
+   
+    var scaleyca_ML2=d3.scaleLinear().domain([maxcd_ML2, mincd_ML2]).range([svgcw/100*85, svgcw/100*90]),
+        scaleycb_ML2=d3.scaleLinear().domain([maxcd_ML2, mincd_ML2]).range([svgcw/100*90, svgcw/100*95]);
+      
+    if(tempaDH > tempbDH)
+    {
+      var scalexca=d3.scaleLinear().domain([tempaTH, tempaBH]).range([5, svgch-10]);
+      var scalexcb=d3.scaleLinear().domain([tempbTH, tempbBH]).range([svgch/2*(1-tempbDH/tempaDH)+5, svgch/2*(1+tempbDH/tempaDH)-10]);
+
+      //左方的比例尺
+      gcDetail.append('g').attr("class", "axis")
+          .attr("transform","translate("+(begin_x+5)+","+begin_y+")")
+          .call(d3.axisRight(scalexca).ticks(5));
+
+      //右方的比例尺
+      gcDetail.append('g').attr("class", "axis")
+          .attr("transform","translate("+(begin_x+(block_width*5)-5)+","+begin_y+")")
+          .call(d3.axisLeft(scalexcb).ticks(3));
+      
+      /////////10条曲线绘制
+      var lineca_COND = d3.line().x(function(d) { return scaleyca_COND(d[attrn_COND]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_COND= d3.line().x(function(d) { return scaleycb_COND(d[attrn_COND]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_SP = d3.line().x(function(d) { return scaleyca_SP(d[attrn_SP]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_SP = d3.line().x(function(d) { return scaleycb_SP(d[attrn_SP]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_AC = d3.line().x(function(d) { return scaleyca_AC(d[attrn_AC]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_AC = d3.line().x(function(d) { return scaleycb_AC(d[attrn_AC]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_ML1 = d3.line().x(function(d) { return scaleyca_ML1(d[attrn_ML1]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_ML1 = d3.line().x(function(d) { return scaleycb_ML1(d[attrn_ML1]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_ML2 = d3.line().x(function(d) { return scaleyca_ML2(d[attrn_ML2]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_ML2 = d3.line().x(function(d) { return scaleycb_ML2(d[attrn_ML2]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+
+      var lineca_array = [lineca_COND, lineca_SP, lineca_AC, lineca_ML1, lineca_ML2];
+      var linecb_array = [linecb_COND, linecb_SP, linecb_AC, linecb_ML1, linecb_ML2];
+
+
+      for(var i = 0; i<lineca_array.length; i++) {
+
+        gcDetail.append("path")
+                .datum(tempcda)
+                .attr("fill", "none")
+                .attr("stroke", "blue")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 2.5)
+                .attr("d", lineca_array[i]);
+
+        gcDetail.append("path")
+                .datum(tempcdb)
+                .attr("fill", "none")
+                .attr("stroke", "green")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 2.5)
+                .attr("d", linecb_array[i]);
+      }
+      
+    } else {
+      
+      var scalexca=d3.scaleLinear().domain([tempaTH, tempaBH]).range([svgch/2*(1-tempaDH/tempbDH)+5, svgch/2*(1+tempaDH/tempbDH)-10]);
+      var scalexcb=d3.scaleLinear().domain([tempbTH, tempbBH]).range([5, svgch-10]);
+
+      //左方的比例尺
+      gcDetail.append('g').attr("class", "axis")
+          .attr("transform","translate("+(begin_x+5)+","+begin_y+")")
+          .call(d3.axisRight(scalexca).ticks(3));
+
+      //右方的比例尺
+      gcDetail.append('g').attr("class", "axis")
+          .attr("transform","translate("+(begin_x+(block_width*5)-5)+","+begin_y+")")
+          .call(d3.axisLeft(scalexcb).ticks(5));
+
+      /////////10条曲线绘制
+      var lineca_COND = d3.line().x(function(d) { return scaleyca_COND(d[attrn_COND]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_COND= d3.line().x(function(d) { return scaleycb_COND(d[attrn_COND]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_SP = d3.line().x(function(d) { return scaleyca_SP(d[attrn_SP]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_SP = d3.line().x(function(d) { return scaleycb_SP(d[attrn_SP]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_AC = d3.line().x(function(d) { return scaleyca_AC(d[attrn_AC]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_AC = d3.line().x(function(d) { return scaleycb_AC(d[attrn_AC]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_ML1 = d3.line().x(function(d) { return scaleyca_ML1(d[attrn_ML1]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_ML1 = d3.line().x(function(d) { return scaleycb_ML1(d[attrn_ML1]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+          
+      var lineca_ML2 = d3.line().x(function(d) { return scaleyca_ML2(d[attrn_ML2]); })
+                .y(function(d) { return scalexca(d.DEPT); });
+      var linecb_ML2 = d3.line().x(function(d) { return scaleycb_ML2(d[attrn_ML2]); })
+                .y(function(d) { return scalexcb(d.DEPT); });
+
+      var lineca_array = [lineca_COND, lineca_SP, lineca_AC, lineca_ML1, lineca_ML2];
+      var linecb_array = [linecb_COND, linecb_SP, linecb_AC, linecb_ML1, linecb_ML2];
+
+      for(var i = 0; i<lineca_array.length; i++) {
+
+        gcDetail.append("path")
+                .datum(tempcda)
+                .attr("fill", "none")
+                .attr("stroke", "blue")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 2.5)
+                .attr("d", lineca_array[i]);
+        gcDetail.append("path")
+                .datum(tempcdb)
+                .attr("fill", "none")
+                .attr("stroke", "green")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 2.5)
+                .attr("d", linecb_array[i]);
+      }
+    }
+ 
+  }
+    ////////////////svgm中上方和左方的曲线
+    //var AC_detail = svgm.append("g").classed("AC_detail", true);
+    ////////x方向上的曲线
+    var temp_x=wbdatas[lmk].cdata.filter( function(cd) { return cd["AC"];} );    
+
+    var max_X=d3.max(temp_x, function(d){ return d["AC"]; });
+    var min_X=d3.min(temp_x, function(d){ return d["AC"]; });
+
+    //x坐标比例尺
+    var scale_X_X=d3.scaleLinear().domain([0, 3200]).range([100, svgmw-starts*0.3]);
+    //y坐标比例尺
+    var scaley_X_Y=d3.scaleLinear().domain([max_X, min_X]).range([10, 100]);
+    //x方向上的线条函数
+    var lineca = d3.line()
+            .x(function(d) { return scale_X_X(temp_x.indexOf(d)); })
+            .y(function(d) { return scaley_X_Y(d["AC"]); });
+
+    svgm.append("path")
+      .attr("class","Grid")
+          .datum(temp_x)
+          .attr("fill", "none")
+          .attr("stroke", "blue")
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("stroke-width", 1)
+          .attr("d", lineca);
+      
+    ////////y方向上的曲线
+    var temp_y=wbdatas[lmk+1].cdata.filter(function(cd) {return cd["AC"]}); 
+
+    var max_Y=d3.max(temp_y, function(d){return d["AC"]});
+    var min_Y=d3.min(temp_y, function(d){return d["AC"]});
+
+    //x坐标比例尺
+    var scale_Y_X=d3.scaleLinear().domain([0, 3200]).range([100, svgmh-starts*0.3]);
+    //y坐标比例尺
+    var scale_Y_Y=d3.scaleLinear().domain([max_Y, min_Y]).range([10, 100]);
+    //x方向上的线条函数
+    var lineca = d3.line()
+            .x(function(d) { return scale_Y_Y(d["AC"]); })
+            .y(function(d) { return scale_Y_X(temp_y.indexOf(d)); });
+
+    svgm.append("path")
+      .attr("class","Grid")
+          .datum(temp_y)
+          .attr("fill", "none")
+          .attr("stroke", "blue")
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("stroke-width", 1)
+          .attr("d", lineca);
+
+    //////////x方向上的坐标轴和方框的绘制
+    //用于坐标轴的线性比例尺
+    var temp_x=svgmw-starts*0.3-100;
+    var x=d3.scaleOrdinal().range([0,temp_x/4*1,temp_x/4*2,temp_x/4*3,temp_x]);   
+    var xScale=x.domain([0,800,1600,2400,3200]);
+
+    //方框的绘制
+    var lines_x=[[100,100],[100,5],[temp_x+100,5],[temp_x+100,100]];
+    var linePath=d3.line();
+    svgm.append("path")
+      .attr("class","Grid")
+      .attr("d",linePath(lines_x))
+      .attr("stroke","black")
+      .attr("stroke-width","1px")
+      .attr("fill","none");
+    //////////y方向上的坐标轴和方框的绘制
+    //用于坐标轴的线性比例尺
+    var temp_y=svgmh-starts*0.3-100;
+    var y=d3.scaleOrdinal().range([0,temp_y/4*1,temp_y/4*2,temp_y/4*3,temp_y]); 
+    var yScale=y.domain([0,800,1600,2400,3200]);
+
+    //方框的绘制
+    var lines_y=[[100,100],[5,100],[5,temp_y+100],[100,temp_y+100]];
+    svgm.append("path")
+      .attr("class","Grid")
+      .attr("d",linePath(lines_y))
+      .attr("stroke","black")
+      .attr("stroke-width","1px")
+      .attr("fill","none");
+
+    // svgm.append('g').attr("class",'Grid')
+    //   .attr("transform","translate("+100+","+100+")")
+    //   .call(d3.axisTop(xScale));
+
+    // svgm.append('g').attr("class", 'Grid')
+    //   .attr("transform","translate(100,100)")
+    //   .call(d3.axisLeft(yScale));
+
+  }
+  //展示两口井 1000X620 600X400
+  //show_two(lmdatas[2],2,[0,0],-1);
+  function show_two(lmdata,lmk,index,u_or_d) {
+
+    svgk.selectAll("._rect").remove();
+    svgk.selectAll("._text").remove();
+    svgk.selectAll("._line").remove();
+    svgk.selectAll("._path").remove();
+
+    var well_width=80;
+    var well_height=svgkh-200;
+    var interval=200;
+
+    var startx=40;
+    var starty=80;
+
+    var kscale=well_height/(BotH-TopH);
+    var color_line = d3.scaleLinear()
+        .domain([0,20,40])
+        .range(['#B0E0E6', '#FFFF00', '#8B0000']);
+
+    console.log(wbdatas)
+    
+    for(var i=0;i<2;i++)
+    {
+      svgk.append("rect")
+        .attr("class", "_rect")
+        .attr("x", startx+(well_width+interval)*i)
+        .attr("y", starty)
+        .attr("width", well_width)
+        .attr("height", well_height)
+        .attr("stroke","black")
+        .attr("stroke-width",1)
+        .attr("fill","none");
+
+      svgk.append("text")
+        .attr("class", "_text")
+        .attr("x", startx+(well_width+interval)*i)
+        .attr("y", starty)
+        .attr("dy", "-0.35em")
+        .attr("font-size","20px")
+        .attr("text-anchor", "start")
+        .text(welldata[i].ID);
+
+      var FlagScale_kview = d3.scaleLinear()
+            .domain([wbdatas[lmk+i].bdata[0].th, wbdatas[lmk+i].bdata[wbdatas[lmk+i].bdata.length-1].bh])
+            .range([0, well_height]);
+
+      for (var j=0;j<wbdatas[lmk+i].bdata.length;j++) {
+        svgk.append("rect")
+            .attr("class", "_rect")
+            .attr("x", startx+(interval+well_width)*i)
+            .attr("y", starty+FlagScale_kview(wbdatas[lmk+i].bdata[j].th))
+            .attr("width", well_width)
+            .attr("height", FlagScale_kview(wbdatas[lmk+i].bdata[j].bh)-FlagScale_kview(wbdatas[lmk+i].bdata[j].th))
+            .attr("fill", color_line(wbdatas[lmk+i].bdata[j].dh));
+            // .attr("stroke","black")
+            // .attr("stroke-width",1.0)
+            // .attr("stroke-opacity",0.7);
+      }
+    }
+
+    for (var i=0;i<lmdata.layerpairs.length;i++) {
+      //绘制匹配的面
+      temp_1=lmdata.layerpairs[i][0];
+      temp_2=lmdata.layerpairs[i][1];
+
+      var points=[[startx+well_width,starty+FlagScale_kview(wbdatas[lmk].bdata[temp_1].th)],
+                  [startx+well_width,starty+FlagScale_kview(wbdatas[lmk].bdata[temp_1].bh)],
+                  [startx+well_width+interval,starty+FlagScale_kview(wbdatas[lmk+1].bdata[temp_2].bh)],
+                  [startx+well_width+interval,starty+FlagScale_kview(wbdatas[lmk+1].bdata[temp_2].th)]];
+
+      if(index==lmdata.layerpairs[i]) {
+        if(u_or_d==0) {
+            svgk.append("path")
+                .attr("class", "_path")
+                .attr("d", surface(points))
+                .attr("stroke", "green")
+                .attr("stroke-width", 0.5)
+                .attr("fill", "green");  
+          }
+        } else  {
+          svgk.append("path")
+              .attr("class", "_path")
+              .attr("d", surface(points))
+              .attr("stroke", "blue")
+              .attr("stroke-width", 0.5)
+              .attr("fill", "steelblue");
+        }
+      }
+  }
+});
+</script>

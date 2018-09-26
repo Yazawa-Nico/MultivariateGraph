@@ -1,0 +1,73 @@
+html
+p {
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 3px;
+}
+.panel {
+  float: left;
+  margin-bottom: 0px;
+}
+.panel-heading {
+  padding: 2.5px 5px;
+  height: 30px;
+  font-size: 16px;
+  color: #0c0c0c;
+  background-image: linear-gradient(to bottom, #fbfbfb 0, #e0e0e0 100%);
+  background-color: #000;
+  border: none;
+}
+.panel-body {
+  background-color: #F8F8F8;
+  padding: 4px 5px;
+}
+
+#all {
+  width: 1920px;
+  height: 1040px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-right: 0px; 
+}
+
+#left_side {
+  width: 1440px;
+  height: 1040px;
+  float: left;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px; 
+}
+
+#mainview{
+  width: 645px;
+  height: 615px;
+  margin: auto;
+}
+
+#matrixview {
+  width: 610px;
+  height: 610px;
+  margin: auto;
+}
+
+#detailview {
+  width: 780px;
+  height: 350px;
+  margin: auto;
+}
+
+#kview {
+  width: 450px;
+  height: 800px;
+  margin: auto;
+}
+
+#curveview {
+  width: 640px;
+  height: 350px;
+  margin: auto;
+  float: left; 
+}
